@@ -140,6 +140,34 @@ importers:
         specifier: ^5.7.3
         version: 5.9.3
 
+  packages/designer-react:
+    dependencies:
+      '@openreport/core':
+        specifier: workspace:*
+        version: link:../core
+      '@openreport/schema':
+        specifier: workspace:*
+        version: link:../schema
+      lucide-react:
+        specifier: ^0.475.0
+        version: 0.475.0(react@18.3.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.18
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ^18.3.5
+        version: 18.3.7(@types/react@18.3.31)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
   packages/exporters:
     dependencies:
       '@openreport/data-engine':
@@ -196,6 +224,40 @@ importers:
         specifier: ^3.24.2
         version: 3.25.76
     devDependencies:
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  packages/viewer-react:
+    dependencies:
+      '@openreport/core':
+        specifier: workspace:*
+        version: link:../core
+      '@openreport/exporters':
+        specifier: workspace:*
+        version: link:../exporters
+      '@openreport/layout-engine':
+        specifier: workspace:*
+        version: link:../layout-engine
+      '@openreport/schema':
+        specifier: workspace:*
+        version: link:../schema
+      lucide-react:
+        specifier: ^0.475.0
+        version: 0.475.0(react@18.3.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.18
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ^18.3.5
+        version: 18.3.7(@types/react@18.3.31)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
       typescript:
         specifier: ^5.7.3
         version: 5.9.3

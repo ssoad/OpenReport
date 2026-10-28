@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openreport.dev/schemas/v1/report.json",
+  "title": "OpenReport Specification v1.0",
+  "description": "JSON schema for OpenReport universal report definitions.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "name",
+    "page",
+    "dataSources",
+    "parameters",
+    "header",
+    "details",
+    "footer"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "enum": ["1.0.0"]
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]+$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "page": {
+      "type": "object",
+      "required": ["size", "orientation", "margins", "unit"],
+      "properties": {
+        "size": {
+          "type": "string",
+          "enum": ["A4", "Letter", "Legal", "Custom"]
+        },
+        "orientation": {
+          "type": "string",
+          "enum": ["portrait", "landscape"]
+        },
+        "width": { "type": "number" },
+        "height": { "type": "number" },
+        "unit": {
+          "type": "string",
+          "enum": ["pt", "mm", "in", "px"]
+        },
+        "margins": {
+          "type": "object",
+          "required": ["top", "right", "bottom", "left"],
+          "properties": {
+            "top": { "type": "number" },
+            "right": { "type": "number" },
+            "bottom": { "type": "number" },
+            "left": { "type": "number" }
+          }
+        }
+      }
+    },
+    "dataSources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "type"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["memory", "json", "csv", "rest", "sql", "custom"]
+          },
+          "endpoint": { "type": "string" },
+          "staticData": { "type": "array" }
+        }
+      }
+    },
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "label"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["string", "number", "boolean", "date", "array"]
+          },
+          "label": { "type": "string" },
+          "defaultValue": {},
+          "required": { "type": "boolean" },
+          "allowedValues": { "type": "array" }
+        }
+      }
+    },
+    "header": { "$ref": "#/$defs/band" },
+    "groupHeaders": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/band" }
+    },
+    "details": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/band" }
+    },
+    "groupFooters": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/band" }
+    },
+    "footer": { "$ref": "#/$defs/band" }
+  },
+  "$defs": {
+    "band": {
+      "type": "object",
+      "required": ["id", "type", "height", "elements"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": [
+            "reportHeader",
+            "pageHeader",
+            "groupHeader",
+            "detail",
+            "groupFooter",
+            "pageFooter",
+            "reportFooter"
+          ]
+        },
+        "height": { "type": "number", "minimum": 0 },
+        "canGrow": { "type": "boolean" },
+        "elements": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/element" }
+        }
+      }
+    },
+    "element": {
+      "type": "object",
+      "required": ["id", "type", "x", "y", "width", "height"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": ["text", "table", "kpi", "barcode", "chart", "line", "shape", "image"]
+        },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "width": { "type": "number", "minimum": 0 },
+        "height": { "type": "number", "minimum": 0 },
+        "text": { "type": "string" },
+        "dataset": { "type": "string" },
+        "barcodeType": { "type": "string", "enum": ["code128", "qr"] },
+        "columns": { "type": "array" },
+        "style": {
+          "type": "object",
+          "properties": {
+            "fontSize": { "type": "number" },
+            "fontWeight": { "type": "string" },
+            "color": { "type": "string" },
+            "backgroundColor": { "type": "string" },
+            "textAlign": { "type": "string" },
+            "borderWidth": { "type": "number" },
+            "borderColor": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

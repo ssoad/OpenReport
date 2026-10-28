@@ -1,5 +1,5 @@
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
-import { RenderedDocument, RenderedBox } from '@openreport/layout-engine';
+import { RenderedDocument, RenderedBox, generateCode128Matrix, generateQrMatrix } from '@openreport/layout-engine';
 import { hexToRgb } from './color-utils';
 
 export class PdfExporter {
@@ -161,6 +161,31 @@ export class PdfExporter {
         // 6. Draw Vector Charts (Bar / Column)
         if (box.type === 'chart' && box.chartData) {
           PdfExporter.renderVectorChart(pdfPage, pageHeight, box, helvetica, helveticaBold);
+        }
+
+        // 7. Draw Barcode / QR Code vectors
+        if (box.type === 'barcode' && box.text) {
+          const matrix = box.width === box.height || box.text.startsWith('http') || box.text.length > 25
+            ? generateQrMatrix(box.text)
+            : generateCode128Matrix(box.text);
+
+          const modWidth = box.width / matrix.width;
+          const modHeight = box.height / matrix.height;
+          const barcodeY = pageHeight - (box.y + box.height);
+
+          for (let r = 0; r < matrix.height; r++) {
+            for (let c = 0; c < matrix.width; c++) {
+              if (matrix.modules[r]![c]) {
+                pdfPage.drawRectangle({
+                  x: box.x + c * modWidth,
+                  y: barcodeY + (matrix.height - 1 - r) * modHeight,
+                  width: modWidth,
+                  height: modHeight,
+                  color: hexToRgb(box.strokeColor || '#000000')
+                });
+              }
+            }
+          }
         }
       }
     }

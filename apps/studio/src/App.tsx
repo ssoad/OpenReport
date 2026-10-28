@@ -12,6 +12,7 @@ import { ReportViewer } from './components/ReportViewer';
 import { DashboardViewer } from './components/DashboardViewer';
 import { TemplateGallery } from './components/TemplateGallery';
 import { DataSourceManager } from './components/DataSourceManager';
+import { DocsViewer } from './components/DocsViewer';
 
 export function App() {
   const [currentReport, setCurrentReport] = useState<ReportDefinition>(CommercialInvoiceTemplate);
@@ -135,6 +136,12 @@ export function App() {
           <DataSourceManager
             report={currentReport}
             onChange={handleReportChange}
+          />
+        )}
+
+        {mode === 'docs' && (
+          <DocsViewer
+            currentReport={currentReport}
           />
         )}
       </div>

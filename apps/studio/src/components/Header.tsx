@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   Grid,
   Database,
+  BookOpen,
   Download,
   Upload,
   RotateCcw,
@@ -18,7 +19,8 @@ export type StudioMode =
   | 'preview'
   | 'dashboard'
   | 'templates'
-  | 'datasources';
+  | 'datasources'
+  | 'docs';
 
 interface HeaderProps {
   currentMode: StudioMode;
@@ -147,6 +149,18 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <Database className="w-3.5 h-3.5" />
           Data Sources
+        </button>
+
+        <button
+          onClick={() => onModeChange('docs')}
+          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+            currentMode === 'docs'
+              ? 'bg-primary-600 text-white shadow'
+              : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+          }`}
+        >
+          <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+          Integration & Docs
         </button>
       </nav>
 
