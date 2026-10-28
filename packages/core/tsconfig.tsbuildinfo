@@ -1,0 +1,1 @@
+{"root":["./src/engine.ts","./src/index.ts","./src/plugin-registry.ts","./src/__tests__/acceptance.test.ts","./src/__tests__/core.test.ts","./src/templates/executive-sales.ts","./src/templates/inventory.ts","./src/templates/invoice.ts"],"version":"5.9.3"}

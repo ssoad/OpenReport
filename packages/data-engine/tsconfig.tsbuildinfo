@@ -1,0 +1,1 @@
+{"root":["./src/csv-parser.ts","./src/data-manager.ts","./src/index.ts","./src/query-engine.ts","./src/types.ts","./src/__tests__/data-engine.test.ts","./src/providers/csv.ts","./src/providers/json.ts","./src/providers/memory.ts","./src/providers/rest.ts"],"version":"5.9.3"}

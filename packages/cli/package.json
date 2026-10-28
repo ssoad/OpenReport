@@ -1,0 +1,23 @@
+{
+  "name": "@openreport/cli",
+  "version": "0.1.0",
+  "description": "Command-line interface for OpenReport",
+  "bin": {
+    "openreport": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@openreport/schema": "workspace:*",
+    "@openreport/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "typescript": "^5.7.3"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@openreport/exporters",
+  "version": "0.1.0",
+  "description": "Multi-Target Document Exporters (PDF, XLSX, CSV, HTML, SVG) for OpenReport",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@openreport/schema": "workspace:*",
+    "@openreport/expressions": "workspace:*",
+    "@openreport/data-engine": "workspace:*",
+    "@openreport/layout-engine": "workspace:*",
+    "pdf-lib": "^1.17.1",
+    "exceljs": "^4.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "typescript": "^5.7.3"
+  }
+}

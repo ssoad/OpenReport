@@ -1,0 +1,1 @@
+{"root":["./src/bands.ts","./src/datasources.ts","./src/elements.ts","./src/index.ts","./src/migration.ts","./src/page.ts","./src/parameters.ts","./src/report.ts","./src/validator.ts","./src/__tests__/schema.test.ts"],"version":"5.9.3"}

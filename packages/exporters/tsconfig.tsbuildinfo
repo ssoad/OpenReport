@@ -1,0 +1,1 @@
+{"root":["./src/color-utils.ts","./src/csv-exporter.ts","./src/html-exporter.ts","./src/index.ts","./src/pdf-exporter.ts","./src/svg-exporter.ts","./src/xlsx-exporter.ts","./src/__tests__/exporters.test.ts"],"version":"5.9.3"}

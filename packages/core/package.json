@@ -1,0 +1,28 @@
+{
+  "name": "@openreport/core",
+  "version": "0.1.0",
+  "description": "Unified OpenReport Engine & Plugin Architecture",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@openreport/schema": "workspace:*",
+    "@openreport/expressions": "workspace:*",
+    "@openreport/data-engine": "workspace:*",
+    "@openreport/layout-engine": "workspace:*",
+    "@openreport/exporters": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
