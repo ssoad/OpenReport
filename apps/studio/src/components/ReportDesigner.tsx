@@ -383,7 +383,17 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
       return (
         <div
           key={el.id}
-          onMouseDown={(e) => handleMouseDown(e, el)}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            handleMouseDown(e, el);
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            setSelectedElementId(el.id);
+            if (window.innerWidth >= 1024) {
+              setIsRightPanelOpen(true);
+            }
+          }}
           style={{
             position: 'absolute',
             left: `${el.x}pt`,
@@ -468,7 +478,13 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
               {['nw', 'ne', 'se', 'sw', 'n', 's', 'e', 'w'].map((handle) => (
                 <div
                   key={handle}
-                  onMouseDown={(e) => handleMouseDown(e, el, handle)}
+                  onMouseDown={(e) => {
+                    e.stopPropagation();
+                    handleMouseDown(e, el, handle);
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
                   className={`absolute w-2 h-2 bg-white border border-primary-600 z-40 ${
                     handle === 'nw' ? '-top-1 -left-1 cursor-nwse-resize' :
                     handle === 'ne' ? '-top-1 -right-1 cursor-nesw-resize' :
@@ -785,7 +801,11 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
         {/* Scrollable Canvas Container */}
         <div
           ref={canvasRef}
-          onClick={() => setSelectedElementId(null)}
+          onClick={(e) => {
+            if (e.target === canvasRef.current) {
+              setSelectedElementId(null);
+            }
+          }}
           className="flex-1 overflow-auto p-2 sm:p-6 md:p-12 flex justify-center items-start"
         >
           {/* Outer Reserver Box for Scroll Container */}
@@ -794,6 +814,11 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
               width: `${pageDims.width * zoom}pt`,
               height: `${pageDims.height * zoom}pt`,
               position: 'relative'
+            }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                setSelectedElementId(null);
+              }
             }}
           >
             {/* Physical Page Box with Transform Scale */}
@@ -808,6 +833,11 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
                 left: 0
               }}
               className="bg-white shadow-2xl relative border border-slate-300"
+              onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                  setSelectedElementId(null);
+                }
+              }}
             >
             {/* Margins Guide Lines */}
             <div
@@ -833,6 +863,11 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
                   height: `${report.bands.reportHeader.height}pt`
                 }}
                 className="border-b border-indigo-200/60"
+                onClick={(e) => {
+                  if (e.target === e.currentTarget) {
+                    setSelectedElementId(null);
+                  }
+                }}
               >
                 <span className="absolute -top-3 left-1 text-[8px] uppercase tracking-wider font-bold text-indigo-400 bg-indigo-50 px-1 rounded">
                   Report Header
@@ -851,6 +886,11 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
                 height: `${report.bands.detail.height || 400}pt`
               }}
               className="relative"
+              onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                  setSelectedElementId(null);
+                }
+              }}
             >
               <span className="absolute -top-3 left-1 text-[8px] uppercase tracking-wider font-bold text-emerald-500 bg-emerald-50 px-1 rounded">
                 Detail Band
@@ -869,6 +909,11 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
                   height: `${report.bands.pageFooter.height}pt`
                 }}
                 className="border-t border-slate-200"
+                onClick={(e) => {
+                  if (e.target === e.currentTarget) {
+                    setSelectedElementId(null);
+                  }
+                }}
               >
                 <span className="absolute -bottom-3 left-1 text-[8px] uppercase tracking-wider font-bold text-slate-400 bg-slate-50 px-1 rounded">
                   Page Footer

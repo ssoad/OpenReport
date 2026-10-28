@@ -110,7 +110,10 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({
           {report.bands.detail.elements.map((el) => (
             <div
               key={el.id}
-              onClick={() => setSelectedElementId(el.id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedElementId(el.id);
+              }}
               style={{
                 position: 'absolute',
                 left: `${el.x}pt`,
