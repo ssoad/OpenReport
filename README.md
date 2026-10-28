@@ -5,8 +5,35 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/openreport/openreport/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-Passing-emerald?style=flat-square" alt="CI Status" /></a>
+  <a href="https://github.com/openreport/openreport/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-blue?style=flat-square" alt="License" /></a>
+  <a href="#"><img src="https://img.shields.io/badge/TypeScript-5.x-blue?style=flat-square&logo=typescript" alt="TypeScript" /></a>
+  <a href="#"><img src="https://img.shields.io/badge/Tests-35%20Passed-emerald?style=flat-square" alt="Tests" /></a>
+  <a href="https://openreport.github.io/openreport/"><img src="https://img.shields.io/badge/Documentation-GitHub%20Pages-indigo?style=flat-square" alt="GitHub Pages" /></a>
+</p>
+
+<p align="center">
   A developer-first, universal reporting engine combining pixel-perfect paginated document design, interactive report viewing, business intelligence dashboards, multi-format exports (PDF, Excel, CSV), and a sandboxed calculation language.
 </p>
+
+---
+
+## Visual Showcase
+
+### 1. In-Browser Visual Report Designer
+> Desktop-class drag-and-drop banded report designer with snapping grid, precision rulers, component palette, field tree, and property inspector.
+
+![OpenReport Designer](docs/screenshots/01-designer-dark.png)
+
+### 2. Interactive Paginated Report Viewer
+> Embeddable multi-page document viewer with live parameter filtering, document search, zoom controls, and vector PDF exports.
+
+![OpenReport Viewer](docs/screenshots/02-preview-dark.png)
+
+### 3. Business Intelligence & Analytics Dashboard
+> Responsive multi-column dashboard with interactive KPI cards, revenue charts, and real-time cross-filtering.
+
+![OpenReport Dashboard](docs/screenshots/03-dashboard-dark.png)
 
 ---
 

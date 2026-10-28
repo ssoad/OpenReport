@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <title>OpenReport — Universal Open-Source Reporting & Analytics Platform</title>
+  <meta name="description" content="Next-generation open-source reporting engine with pixel-accurate paginated reports, visual drag-and-drop designer, BI dashboards, and multi-target exporters." />
+  
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+              950: '#172554'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Markdown, Code Highlight, and Mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.4); border-radius: 3px; }
+    .dark ::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.4); }
+
+    /* Markdown prose styling */
+    .markdown-body h1 { font-size: 1.875rem; font-weight: 800; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .markdown-body h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2rem; margin-bottom: 0.75rem; border-bottom: 1px solid rgba(156, 163, 175, 0.2); padding-bottom: 0.5rem; }
+    .markdown-body h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+    .markdown-body p { margin-bottom: 1rem; line-height: 1.625; }
+    .markdown-body ul, .markdown-body ol { margin-left: 1.5rem; margin-bottom: 1rem; list-style-type: disc; }
+    .markdown-body ol { list-style-type: decimal; }
+    .markdown-body li { margin-bottom: 0.25rem; }
+    .markdown-body table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.875rem; }
+    .markdown-body th, .markdown-body td { border: 1px solid rgba(156, 163, 175, 0.3); padding: 0.5rem 0.75rem; text-align: left; }
+    .markdown-body th { font-weight: 600; }
+    .markdown-body blockquote { border-left: 4px solid #3b82f6; padding-left: 1rem; margin-bottom: 1rem; opacity: 0.9; font-style: italic; }
+    .markdown-body pre { border-radius: 0.5rem; padding: 1rem; overflow-x: auto; margin-bottom: 1.25rem; }
+    .markdown-body code:not(pre code) { background: rgba(156, 163, 175, 0.15); padding: 0.15rem 0.35rem; border-radius: 0.25rem; font-size: 0.875em; }
+  </style>
+
+  <script>
+    // Theme initialization
+    if (localStorage.getItem('openreport_theme') === 'dark' || (!localStorage.getItem('openreport_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors">
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 lg:px-8 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <button id="mobileMenuBtn" class="lg:hidden p-1.5 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 rounded">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-primary-600 text-white font-black flex items-center justify-center text-sm shadow-md">OR</div>
+        <div>
+          <span class="font-bold text-base tracking-tight text-slate-900 dark:text-white">OpenReport</span>
+          <span class="hidden sm:inline-block ml-2 text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-primary-100 dark:bg-primary-950/60 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800">v0.1.0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Search Input -->
+      <div class="relative hidden sm:block w-48 md:w-64">
+        <input id="searchInput" type="text" placeholder="Search docs..." class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+      </div>
+
+      <!-- Theme Switcher -->
+      <button id="themeToggleBtn" class="p-2 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 transition" title="Toggle Theme">
+        <svg id="moonIcon" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+        <svg id="sunIcon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+      </button>
+
+      <!-- GitHub Link -->
+      <a href="https://github.com/openreport/openreport" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 transition shadow-sm">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path></svg>
+        <span class="hidden sm:inline">GitHub</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="flex-1 flex max-w-7xl mx-auto w-full overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-30 w-72 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 p-4 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 flex flex-col space-y-4 overflow-y-auto shrink-0 top-14 lg:top-0">
+      <div class="space-y-1">
+        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-2">Core Overview</span>
+        <button data-doc="PRODUCT_VISION.md" class="nav-item active w-full text-left px-3 py-2 rounded-lg text-xs font-semibold flex items-center justify-between">
+          <span>Product Vision & Architecture</span>
+        </button>
+        <button data-doc="ARCHITECTURE.md" class="nav-item w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between">
+          <span>System Pipeline & Flowcharts</span>
+        </button>
+        <button data-doc="FEATURE_PARITY.md" class="nav-item w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between">
+          <span>DevExpress Parity Matrix</span>
+        </button>
+      </div>
+
+      <div class="space-y-1">
+        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-2">Developers & Integration</span>
+        <button data-doc="INTEGRATION_GUIDE.md" class="nav-item w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between">
+          <span>Universal Integration Guide</span>
+        </button>
+        <button data-doc="DATA_PROVIDERS.md" class="nav-item w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between">
+          <span>Data Providers & RLS</span>
+        </button>
+        <button data-doc="COMPONENTS_REFERENCE.md" class="nav-item w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between">
+          <span>Components & Box Model</span>
+        </button>
+        <button data-doc="REPORT_SCHEMA.md" class="nav-item w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between">
+          <span>Report Schema Spec v1.0.0</span>
+        </button>
+      </div>
+
+      <div class="space-y-1">
+        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-2">Visual Gallery</span>
+        <button data-doc="SCREENSHOTS" class="nav-item w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between">
+          <span>Studio Screenshots Gallery</span>
+          <span class="text-[9px] bg-primary-100 dark:bg-primary-950/60 text-primary-600 px-1.5 py-0.5 rounded font-mono">10</span>
+        </button>
+      </div>
+
+      <div class="space-y-1">
+        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-2">Operations & Quality</span>
+        <button data-doc="SECURITY.md" class="nav-item w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between">
+          <span>Security & Zero-Trust Sandbox</span>
+        </button>
+        <button data-doc="ROADMAP.md" class="nav-item w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between">
+          <span>Roadmap & Milestones</span>
+        </button>
+        <button data-doc="CONTRIBUTING.md" class="nav-item w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between">
+          <span>Contributing Guide</span>
+        </button>
+        <button data-doc="PLUGIN_DEVELOPMENT.md" class="nav-item w-doc="PLUGIN_DEVELOPMENT.md" class="nav-item w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between">
+          <span>Plugin Development</span>
+        </button>
+        <button data-doc="TESTING.md" class="nav-item w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between">
+          <span>Testing & Verification (35 tests)</span>
+        </button>
+      </div>
+
+      <div class="mt-auto pt-4 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400">
+        <p>Apache-2.0 License. Pure TypeScript monorepo with 0 proprietary dependencies.</p>
+      </div>
+    </aside>
+
+    <!-- Content Area -->
+    <main class="flex-1 overflow-y-auto px-4 sm:px-8 py-8 w-full max-w-4xl mx-auto">
+      <div id="contentContainer" class="markdown-body text-slate-800 dark:text-slate-200">
+        <!-- Content will be rendered here dynamically -->
+        <div class="flex items-center justify-center h-64 text-slate-400">
+          <svg class="animate-spin h-6 w-6 text-primary-600 mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+          <span>Loading OpenReport documentation...</span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Marked configuration
+    marked.setOptions({
+      highlight: function(code, lang) {
+        const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+        return hljs.highlight(code, { language }).value;
+      },
+      langPrefix: 'hljs language-'
+    });
+
+    // Mermaid configuration
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default',
+      securityLevel: 'loose'
+    });
+
+    // Screenshot gallery generator
+    function renderScreenshotsGallery() {
+      const shots = [
+        { file: 'screenshots/01-designer-dark.png', title: 'Visual Report Designer (Dark Theme)', desc: 'Desktop-class banded report builder with snap grid, component palette, field bindings, and properties inspector.' },
+        { file: 'screenshots/01-designer-light.png', title: 'Visual Report Designer (Light Theme)', desc: 'Clean, accessible light theme with high-contrast rulers and geometry inputs.' },
+        { file: 'screenshots/02-preview-dark.png', title: 'Interactive Report Viewer (Dark Theme)', desc: 'Paginated report viewer with live parameter filtering, document search, zoom controls, and vector PDF export.' },
+        { file: 'screenshots/02-preview-light.png', title: 'Interactive Report Viewer (Light Theme)', desc: 'High-fidelity document rendering with table row wrapping and subtotal summaries.' },
+        { file: 'screenshots/03-dashboard-dark.png', title: 'Business Intelligence Dashboard (Dark Theme)', desc: 'Executive KPI metric cards, revenue breakdown charts, and interactive cross-filtering table.' },
+        { file: 'screenshots/03-dashboard-light.png', title: 'Business Intelligence Dashboard (Light Theme)', desc: 'Responsive multi-column analytics grid with real-time category filtering.' },
+        { file: 'screenshots/04-templates-dark.png', title: 'Template Gallery (Dark Theme)', desc: 'Production-ready templates: Commercial Invoices, Executive Sales Summaries, and Warehouse Inventory.' },
+        { file: 'screenshots/05-datasources-dark.png', title: 'Data Source & Schema Explorer (Dark Theme)', desc: 'Federated data adapters (Memory, REST API, CSV) with schema type inference and raw record inspection.' },
+        { file: 'screenshots/06-docs-dark.png', title: 'In-App Developer Integration Center (Dark Theme)', desc: 'Interactive SDK code examples, multi-tier execution pipeline cards, and JSON specification explorer.' }
+      ];
+
+      let html = '<h1 class="text-2xl font-bold mb-4">OpenReport Studio & Component Gallery</h1>';
+      html += '<p class="text-sm text-slate-500 dark:text-slate-400 mb-8">High-resolution visual captures of the OpenReport Studio, interactive viewer, and visual designer in production.</p>';
+      html += '<div class="grid grid-cols-1 md:grid-cols-2 gap-6">';
+      
+      shots.forEach(s => {
+        html += `
+          <div class="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition">
+            <a href="${s.file}" target="_blank" rel="noopener noreferrer">
+              <img src="${s.file}" alt="${s.title}" class="w-full h-auto object-cover border-b border-slate-200 dark:border-slate-800 hover:opacity-95 transition" loading="lazy" />
+            </a>
+            <div class="p-4 space-y-1">
+              <h3 class="text-sm font-bold text-slate-900 dark:text-slate-100">${s.title}</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">${s.desc}</p>
+            </div>
+          </div>
+        `;
+      });
+      html += '</div>';
+      return html;
+    }
+
+    // Load Document logic
+    async function loadDocument(docName) {
+      const container = document.getElementById('contentContainer');
+      
+      if (docName === 'SCREENSHOTS') {
+        container.innerHTML = renderScreenshotsGallery();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      container.innerHTML = '<div class="py-12 text-center text-slate-400">Loading ' + docName + '...</div>';
+
+      try {
+        const res = await fetch('./' + docName);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        let text = await res.text();
+
+        // Render Markdown
+        container.innerHTML = marked.parse(text);
+
+        // Render Mermaid Diagrams if present
+        const mermaidNodes = container.querySelectorAll('.language-mermaid');
+        if (mermaidNodes.length > 0) {
+          mermaidNodes.forEach((node, idx) => {
+            const chartDef = node.textContent;
+            const containerDiv = document.createElement('div');
+            containerDiv.className = 'mermaid my-6 flex justify-center bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800';
+            containerDiv.textContent = chartDef;
+            node.parentNode.replaceWith(containerDiv);
+          });
+          mermaid.run();
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (err) {
+        container.innerHTML = `
+          <div class="p-6 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-xl">
+            <h2 class="text-red-700 dark:text-red-300 font-bold text-base">Failed to load ${docName}</h2>
+            <p class="text-xs text-red-600 dark:text-red-400 mt-1">Error: ${err.message}. If viewing locally via file://, please serve over HTTP or inspect on GitHub Pages.</p>
+          </div>
+        `;
+      }
+    }
+
+    // Active Navigation Styling
+    const navItems = document.querySelectorAll('.nav-item');
+    function setActiveNav(selectedDoc) {
+      navItems.forEach(item => {
+        const doc = item.getAttribute('data-doc');
+        if (doc === selectedDoc) {
+          item.className = 'nav-item active w-full text-left px-3 py-2 rounded-lg text-xs font-semibold bg-primary-50 dark:bg-primary-950/50 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800 transition flex items-center justify-between';
+        } else {
+          item.className = 'nav-item w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200 transition flex items-center justify-between';
+        }
+      });
+    }
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const doc = item.getAttribute('data-doc');
+        setActiveNav(doc);
+        window.location.hash = doc;
+        loadDocument(doc);
+        // Close mobile drawer on item click
+        document.getElementById('sidebar').classList.add('-translate-x-full');
+      });
+    });
+
+    // Theme toggle button
+    document.getElementById('themeToggleBtn').addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('openreport_theme', isDark ? 'dark' : 'light');
+      mermaid.initialize({ theme: isDark ? 'dark' : 'default' });
+      const currentDoc = window.location.hash.slice(1) || 'PRODUCT_VISION.md';
+      loadDocument(currentDoc);
+    });
+
+    // Mobile menu toggle
+    document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('-translate-x-full');
+    });
+
+    // Search filter
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      navItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(q) ? 'flex' : 'none';
+      });
+    });
+
+    // Initial load from Hash
+    const initialDoc = window.location.hash.slice(1) || 'PRODUCT_VISION.md';
+    setActiveNav(initialDoc);
+    loadDocument(initialDoc);
+  </script>
+</body>
+</html>

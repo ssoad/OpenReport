@@ -15,9 +15,37 @@ import { DataSourceManager } from './components/DataSourceManager';
 import { DocsViewer } from './components/DocsViewer';
 
 export function App() {
+  const getInitialMode = (): StudioMode => {
+    const params = new URLSearchParams(window.location.search);
+    const m = params.get('mode') as StudioMode;
+    if (['designer', 'preview', 'dashboard', 'templates', 'datasources', 'docs'].includes(m)) {
+      return m;
+    }
+    return 'designer';
+  };
+
   const [currentReport, setCurrentReport] = useState<ReportDefinition>(CommercialInvoiceTemplate);
-  const [mode, setMode] = useState<StudioMode>('designer');
+  const [mode, setMode] = useState<StudioMode>(getInitialMode);
   const [isDirty, setIsDirty] = useState<boolean>(false);
+
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const themeParam = params.get('theme');
+    if (themeParam === 'dark') {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('openreport_theme', 'dark');
+    } else if (themeParam === 'light') {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('openreport_theme', 'light');
+    }
+  }, []);
+
+  const handleModeChange = (newMode: StudioMode) => {
+    setMode(newMode);
+    const url = new URL(window.location.href);
+    url.searchParams.set('mode', newMode);
+    window.history.replaceState({}, '', url.toString());
+  };
 
   const handleReportChange = (updatedReport: ReportDefinition) => {
     setCurrentReport(updatedReport);
@@ -92,7 +120,7 @@ export function App() {
     <div className="h-screen w-screen flex flex-col overflow-hidden bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
       <Header
         currentMode={mode}
-        onModeChange={setMode}
+        onModeChange={handleModeChange}
         reportTitle={currentReport.title}
         onExport={handleExport}
         onSaveJson={handleSaveJson}
@@ -125,10 +153,10 @@ export function App() {
             currentReportId={currentReport.id}
             onSelectReport={(tpl) => {
               setCurrentReport(tpl);
-              setMode('designer');
+              handleModeChange('designer');
               setIsDirty(false);
             }}
-            onOpenDashboard={() => setMode('dashboard')}
+            onOpenDashboard={() => handleModeChange('dashboard')}
           />
         )}
 
