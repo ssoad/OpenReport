@@ -29,7 +29,9 @@ import {
   Unlock,
   Layers,
   Database,
-  Palette
+  Palette,
+  SlidersHorizontal,
+  X
 } from 'lucide-react';
 
 interface ReportDesignerProps {
@@ -40,7 +42,10 @@ interface ReportDesignerProps {
 export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange }) => {
   const [selectedElementId, setSelectedElementId] = useState<string | null>(null);
   const [leftTab, setLeftTab] = useState<'palette' | 'data' | 'layers'>('palette');
-  const [zoom, setZoom] = useState<number>(1.0);
+  const [zoom, setZoom] = useState<number>(0.9);
+  const [isLeftPanelOpen, setIsLeftPanelOpen] = useState<boolean>(true);
+  const [isRightPanelOpen, setIsRightPanelOpen] = useState<boolean>(true);
+  const [mobileTab, setMobileTab] = useState<'canvas' | 'palette' | 'inspector'>('canvas');
   const [history, setHistory] = useState<ReportDefinition[]>([report]);
   const [historyIndex, setHistoryIndex] = useState<number>(0);
 
@@ -52,6 +57,26 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
   const canvasRef = useRef<HTMLDivElement>(null);
   const pageDims = getPageDimensionsPt(report.page);
   const printable = getPrintableAreaPt(report.page);
+
+  // Auto-fit to canvas width
+  const handleFitWidth = () => {
+    if (canvasRef.current) {
+      const containerW = canvasRef.current.clientWidth;
+      const padding = containerW < 640 ? 16 : 48;
+      const availableW = Math.max(200, containerW - padding);
+      const newZoom = Math.max(0.3, Math.min(1.8, availableW / pageDims.width));
+      setZoom(newZoom);
+    }
+  };
+
+  useEffect(() => {
+    // If screen is smaller than 1024px, close sidebars by default to give canvas room
+    if (window.innerWidth < 1024) {
+      setIsLeftPanelOpen(false);
+      setIsRightPanelOpen(false);
+    }
+    handleFitWidth();
+  }, []);
 
   // Push to undo/redo history
   const updateReport = (newReport: ReportDefinition) => {
@@ -245,6 +270,7 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
     cloned.bands.detail.elements.push(newElement);
     updateReport(cloned);
     setSelectedElementId(id);
+    setMobileTab('canvas');
   };
 
   // Delete selected element
@@ -469,7 +495,25 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
       onMouseUp={handleMouseUp}
     >
       {/* LEFT TOOL PANEL (Component Palette & Data Explorer) */}
-      <aside className="w-64 bg-white border-r border-slate-200 flex flex-col z-20 shadow-sm select-none">
+      <aside className={`bg-white border-r border-slate-200 flex flex-col z-20 shadow-sm select-none ${
+        mobileTab === 'palette'
+          ? 'fixed inset-0 top-14 bottom-12 z-30 flex w-full'
+          : isLeftPanelOpen
+          ? 'hidden md:flex w-64 shrink-0'
+          : 'hidden'
+      }`}>
+        {/* Mobile Close Bar */}
+        {mobileTab === 'palette' && (
+          <div className="md:hidden flex items-center justify-between p-3 border-b border-slate-200 bg-slate-50 shrink-0">
+            <span className="text-xs font-bold text-slate-800">Add Components & Data Fields</span>
+            <button
+              onClick={() => setMobileTab('canvas')}
+              className="p-1 text-slate-500 hover:text-slate-800 rounded"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
         {/* Left Tabs */}
         <div className="flex border-b border-slate-200 bg-slate-50">
           <button
@@ -645,10 +689,26 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
       </aside>
 
       {/* CENTRAL DESIGNER CANVAS */}
-      <main className="flex-1 flex flex-col overflow-hidden relative">
-        {/* Canvas Toolbar */}
-        <div className="h-10 bg-white border-b border-slate-200 flex items-center justify-between px-4 z-10">
-          <div className="flex items-center space-x-2">
+      <main className={`flex-1 flex flex-col overflow-hidden relative ${
+        mobileTab !== 'canvas' ? 'hidden md:flex' : 'flex'
+      }`}>
+        {/* Responsive Canvas Toolbar */}
+        <div className="h-10 bg-white border-b border-slate-200 flex items-center justify-between px-2 sm:px-4 z-10 shrink-0 gap-1 overflow-x-auto">
+          <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
+            {/* Left Panel Toggle (Desktop) */}
+            <button
+              onClick={() => setIsLeftPanelOpen(!isLeftPanelOpen)}
+              className={`hidden md:flex items-center gap-1 px-2 py-1 text-xs font-medium rounded transition ${
+                isLeftPanelOpen ? 'bg-primary-50 text-primary-700 border border-primary-200' : 'text-slate-600 hover:bg-slate-100'
+              }`}
+              title="Toggle Components & Data"
+            >
+              <Palette className="w-3.5 h-3.5" />
+              <span className="hidden lg:inline text-[11px]">Palette</span>
+            </button>
+
+            <div className="hidden md:block h-4 w-[1px] bg-slate-200" />
+
             <button
               onClick={handleUndo}
               disabled={historyIndex === 0}
@@ -665,7 +725,7 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
             >
               <Redo2 className="w-4 h-4" />
             </button>
-            <div className="h-4 w-[1px] bg-slate-300" />
+            <div className="h-4 w-[1px] bg-slate-200" />
             <button
               onClick={deleteSelectedElement}
               disabled={!selected}
@@ -676,17 +736,21 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
             </button>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
             <button
-              onClick={() => setZoom(Math.max(0.5, zoom - 0.1))}
+              onClick={() => setZoom(Math.max(0.3, zoom - 0.1))}
               className="p-1 text-slate-600 hover:bg-slate-100 rounded"
               title="Zoom Out"
             >
               <ZoomOut className="w-3.5 h-3.5" />
             </button>
-            <span className="text-xs font-mono text-slate-600 w-12 text-center">
+            <button
+              onClick={handleFitWidth}
+              className="px-1.5 py-0.5 text-[10px] sm:text-xs font-mono text-slate-700 hover:bg-slate-100 rounded text-center"
+              title="Fit Canvas Width"
+            >
               {Math.round(zoom * 100)}%
-            </span>
+            </button>
             <button
               onClick={() => setZoom(Math.min(2.0, zoom + 0.1))}
               className="p-1 text-slate-600 hover:bg-slate-100 rounded"
@@ -695,11 +759,25 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
               <ZoomIn className="w-3.5 h-3.5" />
             </button>
             <button
-              onClick={() => setZoom(1.0)}
+              onClick={handleFitWidth}
               className="p-1 text-slate-600 hover:bg-slate-100 rounded"
-              title="Reset Zoom"
+              title="Fit Page Width"
             >
               <Maximize2 className="w-3.5 h-3.5" />
+            </button>
+
+            <div className="hidden md:block h-4 w-[1px] bg-slate-200" />
+
+            {/* Right Panel Toggle (Desktop) */}
+            <button
+              onClick={() => setIsRightPanelOpen(!isRightPanelOpen)}
+              className={`hidden md:flex items-center gap-1 px-2 py-1 text-xs font-medium rounded transition ${
+                isRightPanelOpen ? 'bg-primary-50 text-primary-700 border border-primary-200' : 'text-slate-600 hover:bg-slate-100'
+              }`}
+              title="Toggle Properties Inspector"
+            >
+              <span className="hidden lg:inline text-[11px]">Inspector</span>
+              <SlidersHorizontal className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
@@ -708,18 +786,29 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
         <div
           ref={canvasRef}
           onClick={() => setSelectedElementId(null)}
-          className="flex-1 overflow-auto p-12 flex justify-center items-start"
+          className="flex-1 overflow-auto p-2 sm:p-6 md:p-12 flex justify-center items-start"
         >
-          {/* Physical Page Box */}
+          {/* Outer Reserver Box for Scroll Container */}
           <div
             style={{
               width: `${pageDims.width * zoom}pt`,
               height: `${pageDims.height * zoom}pt`,
-              transform: `scale(${zoom})`,
-              transformOrigin: 'top center'
+              position: 'relative'
             }}
-            className="bg-white shadow-xl relative border border-slate-300"
           >
+            {/* Physical Page Box with Transform Scale */}
+            <div
+              style={{
+                width: `${pageDims.width}pt`,
+                height: `${pageDims.height}pt`,
+                transform: `scale(${zoom})`,
+                transformOrigin: 'top left',
+                position: 'absolute',
+                top: 0,
+                left: 0
+              }}
+              className="bg-white shadow-2xl relative border border-slate-300"
+            >
             {/* Margins Guide Lines */}
             <div
               style={{
@@ -787,19 +876,36 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
                 {renderBandElements(report.bands.pageFooter.elements, 'pageFooter')}
               </div>
             )}
+            </div>
           </div>
         </div>
       </main>
 
       {/* RIGHT PROPERTIES INSPECTOR */}
-      <aside className="w-72 bg-white border-l border-slate-200 flex flex-col z-20 shadow-sm select-none">
-        <div className="h-10 border-b border-slate-200 px-3 flex items-center justify-between bg-slate-50">
+      <aside className={`bg-white border-l border-slate-200 flex flex-col z-20 shadow-sm select-none ${
+        mobileTab === 'inspector'
+          ? 'fixed inset-0 top-14 bottom-12 z-30 flex w-full'
+          : isRightPanelOpen
+          ? 'hidden md:flex w-72 shrink-0'
+          : 'hidden'
+      }`}>
+        <div className="h-10 border-b border-slate-200 px-3 flex items-center justify-between bg-slate-50 shrink-0">
           <span className="text-xs font-bold text-slate-700">Properties Inspector</span>
-          {selected && (
-            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-primary-50 text-primary-600 border border-primary-200">
-              {selected.element.type}
-            </span>
-          )}
+          <div className="flex items-center gap-2">
+            {selected && (
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-primary-50 text-primary-600 border border-primary-200">
+                {selected.element.type}
+              </span>
+            )}
+            {mobileTab === 'inspector' && (
+              <button
+                onClick={() => setMobileTab('canvas')}
+                className="md:hidden p-1 text-slate-500 hover:text-slate-800 rounded"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-3 space-y-4">
@@ -1014,6 +1120,37 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
           )}
         </div>
       </aside>
+
+      {/* Mobile Designer Bottom Navigation Switcher */}
+      <div className="md:hidden fixed bottom-0 inset-x-0 h-12 bg-white border-t border-slate-200 flex items-center justify-around px-2 z-30 select-none shadow-lg">
+        <button
+          onClick={() => setMobileTab('palette')}
+          className={`flex flex-col items-center gap-0.5 text-[10px] font-medium py-1 px-3 rounded-lg transition ${
+            mobileTab === 'palette' ? 'text-primary-600 bg-primary-50 font-bold' : 'text-slate-500'
+          }`}
+        >
+          <Palette className="w-4 h-4" />
+          <span>Add Elements</span>
+        </button>
+        <button
+          onClick={() => setMobileTab('canvas')}
+          className={`flex flex-col items-center gap-0.5 text-[10px] font-medium py-1 px-3 rounded-lg transition ${
+            mobileTab === 'canvas' ? 'text-primary-600 bg-primary-50 font-bold' : 'text-slate-500'
+          }`}
+        >
+          <Square className="w-4 h-4" />
+          <span>Canvas</span>
+        </button>
+        <button
+          onClick={() => setMobileTab('inspector')}
+          className={`flex flex-col items-center gap-0.5 text-[10px] font-medium py-1 px-3 rounded-lg transition ${
+            mobileTab === 'inspector' ? 'text-primary-600 bg-primary-50 font-bold' : 'text-slate-500'
+          }`}
+        >
+          <SlidersHorizontal className="w-4 h-4" />
+          <span>Properties</span>
+        </button>
+      </div>
     </div>
   );
 };

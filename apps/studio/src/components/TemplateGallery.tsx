@@ -59,10 +59,10 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
   ];
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-100 p-8">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div className="flex-1 overflow-y-auto bg-slate-100 p-4 sm:p-6 md:p-8">
+      <div className="max-w-6xl mx-auto space-y-5 sm:space-y-6">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
             Template & Solution Gallery
           </h1>
           <p className="text-xs text-slate-500 mt-1">
@@ -71,13 +71,13 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
         </div>
 
         {/* Featured BI Dashboard Banner */}
-        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-xl p-6 text-white border border-slate-800 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-xl p-4 sm:p-6 text-white border border-slate-800 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1 max-w-xl">
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-primary-500/20 text-primary-300 border border-primary-500/40 uppercase tracking-wider">
               <Sparkles className="w-3 h-3" />
               Business Intelligence Suite
             </span>
-            <h2 className="text-base font-bold text-white">
+            <h2 className="text-sm sm:text-base font-bold text-white">
               Executive Sales & Analytics Interactive BI Dashboard
             </h2>
             <p className="text-xs text-slate-300 leading-relaxed">
@@ -94,7 +94,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
         </div>
 
         {/* Paginated Report Templates Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {templates.map((tpl) => {
             const Icon = tpl.icon;
             const isCurrent = currentReportId === tpl.id;

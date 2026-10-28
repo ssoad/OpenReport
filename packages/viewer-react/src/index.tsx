@@ -172,51 +172,70 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({
         </div>
       )}
 
-      <div className="flex-1 overflow-auto p-8 flex justify-center items-start">
+      <div className="flex-1 overflow-auto p-2 sm:p-4 md:p-8 flex justify-center items-start">
         <div
           style={{
-            width: `${currentPage.width * zoom}pt`,
-            height: `${currentPage.height * zoom}pt`,
-            transform: `scale(${zoom})`,
-            transformOrigin: 'top center'
+            width: `${currentPage.width * 1.333333 * zoom}px`,
+            height: `${currentPage.height * 1.333333 * zoom}px`,
+            position: 'relative'
           }}
-          className="bg-white shadow-xl relative border border-slate-300"
         >
-          {currentPage.boxes.map((box) => (
-            <div
-              key={box.id}
-              style={{
-                position: 'absolute',
-                left: `${box.x}pt`,
-                top: `${box.y}pt`,
-                width: `${box.width}pt`,
-                height: `${box.height}pt`,
-                backgroundColor: box.backgroundColor || 'transparent',
-                borderRadius: box.borderRadius ? `${box.borderRadius}pt` : undefined
-              }}
-              className="overflow-hidden"
-            >
-              {box.text && (
-                <div
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    fontSize: `${box.font?.size || 10}pt`,
-                    fontFamily: box.font?.family || 'sans-serif',
-                    fontWeight: box.font?.weight || 'normal',
-                    color: box.font?.color || '#0f172a',
-                    textAlign: box.font?.align || 'left',
-                    padding: box.padding ? `${box.padding.top}pt ${box.padding.right}pt ${box.padding.bottom}pt ${box.padding.left}pt` : undefined,
-                    borderBottom: box.borders?.bottom ? `${box.borders.bottom.width}pt ${box.borders.bottom.style} ${box.borders.bottom.color}` : undefined,
-                    borderTop: box.borders?.top ? `${box.borders.top.width}pt ${box.borders.top.style} ${box.borders.top.color}` : undefined,
-                    border: box.borders?.all ? `${box.borders.all.width}pt ${box.borders.all.style} ${box.borders.all.color}` : undefined
-                  }}
-                >
-                  {box.text}
-                </div>
-              )}
-            </div>
-          ))}
+          <div
+            style={{
+              width: `${currentPage.width * 1.333333}px`,
+              height: `${currentPage.height * 1.333333}px`,
+              transform: `scale(${zoom})`,
+              transformOrigin: 'top left',
+              position: 'absolute',
+              top: 0,
+              left: 0
+            }}
+            className="bg-white shadow-xl relative border border-slate-300"
+          >
+            {currentPage.boxes.map((box) => (
+              <div
+                key={box.id}
+                style={{
+                  position: 'absolute',
+                  left: `${box.x * 1.333333}px`,
+                  top: `${box.y * 1.333333}px`,
+                  width: `${box.width * 1.333333}px`,
+                  height: `${box.height * 1.333333}px`,
+                  backgroundColor: box.backgroundColor || 'transparent',
+                  borderRadius: box.borderRadius ? `${box.borderRadius * 1.333333}px` : undefined
+                }}
+                className="overflow-hidden"
+              >
+                {box.text && (
+                  <div
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      fontSize: `${(box.font?.size || 10) * 1.333333}px`,
+                      fontFamily: box.font?.family || 'sans-serif',
+                      fontWeight: box.font?.weight || 'normal',
+                      color: box.font?.color || '#0f172a',
+                      textAlign: box.font?.align || 'left',
+                      padding: box.padding
+                        ? `${box.padding.top * 1.333333}px ${box.padding.right * 1.333333}px ${box.padding.bottom * 1.333333}px ${box.padding.left * 1.333333}px`
+                        : undefined,
+                      borderBottom: box.borders?.bottom
+                        ? `${box.borders.bottom.width * 1.333333}px ${box.borders.bottom.style} ${box.borders.bottom.color}`
+                        : undefined,
+                      borderTop: box.borders?.top
+                        ? `${box.borders.top.width * 1.333333}px ${box.borders.top.style} ${box.borders.top.color}`
+                        : undefined,
+                      border: box.borders?.all
+                        ? `${box.borders.all.width * 1.333333}px ${box.borders.all.style} ${box.borders.all.color}`
+                        : undefined
+                    }}
+                  >
+                    {box.text}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

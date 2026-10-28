@@ -55,10 +55,10 @@ export const DataSourceManager: React.FC<DataSourceManagerProps> = ({ report, on
   const fieldNames = sampleRows.length > 0 ? Object.keys(sampleRows[0]) : [];
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-100 p-8">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div className="flex-1 overflow-y-auto bg-slate-100 p-4 sm:p-6 md:p-8">
+      <div className="max-w-6xl mx-auto space-y-5 sm:space-y-6">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
             Data Sources & Schema Explorer
           </h1>
           <p className="text-xs text-slate-500 mt-1">
@@ -66,7 +66,7 @@ export const DataSourceManager: React.FC<DataSourceManagerProps> = ({ report, on
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
           {/* Data Sources List */}
           <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm space-y-4">
             <span className="text-xs font-bold text-slate-800 uppercase tracking-wider block">
@@ -133,7 +133,7 @@ export const DataSourceManager: React.FC<DataSourceManagerProps> = ({ report, on
           </div>
 
           {/* Data Payload & Schema Inspector */}
-          <div className="md:col-span-2 bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-4">
+          <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-4">
             {selectedSource ? (
               <>
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200">

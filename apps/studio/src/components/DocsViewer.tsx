@@ -204,9 +204,40 @@ openreport init invoice --name "Q4 Client Invoice"`
   };
 
   return (
-    <div className="flex-1 flex overflow-hidden bg-slate-900 text-slate-100">
-      {/* Sidebar Navigation */}
-      <div className="w-64 border-r border-slate-800 bg-slate-950/60 p-4 flex flex-col space-y-6 select-none">
+    <div className="flex-1 flex flex-col md:flex-row overflow-hidden bg-slate-900 text-slate-100">
+      {/* Mobile Horizontal Section Tabs */}
+      <div className="flex md:hidden overflow-x-auto p-2 gap-1.5 bg-slate-950 border-b border-slate-800 shrink-0 select-none">
+        {[
+          { id: 'quickstart', label: 'Quickstart', icon: Zap, accent: 'text-amber-400' },
+          { id: 'react', label: 'React', icon: Code, accent: 'text-cyan-400' },
+          { id: 'node', label: 'Node.js', icon: Server, accent: 'text-emerald-400' },
+          { id: 'python', label: 'Python', icon: Globe, accent: 'text-blue-400' },
+          { id: 'vanilla', label: 'Vanilla JS', icon: FileCode, accent: 'text-yellow-400' },
+          { id: 'cli', label: 'CLI', icon: Terminal, accent: 'text-purple-400' },
+          { id: 'architecture', label: 'Architecture', icon: Layers, accent: 'text-indigo-400' },
+          { id: 'schema', label: 'JSON Spec', icon: Database, accent: 'text-pink-400' }
+        ].map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeSection === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveSection(tab.id as any)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full whitespace-nowrap transition ${
+                isActive
+                  ? 'bg-primary-600 text-white font-semibold shadow'
+                  : 'bg-slate-800/80 text-slate-300 hover:bg-slate-800'
+              }`}
+            >
+              <Icon className={`w-3.5 h-3.5 ${tab.accent || ''}`} />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Desktop Sidebar Navigation */}
+      <div className="hidden md:flex w-64 border-r border-slate-800 bg-slate-950/60 p-4 flex-col space-y-6 select-none shrink-0">
         <div>
           <div className="text-[11px] font-semibold tracking-wider uppercase text-slate-400 mb-2">
             Developer Guides
@@ -321,7 +352,7 @@ openreport init invoice --name "Q4 Client Invoice"`
       </div>
 
       {/* Main Documentation Content Area */}
-      <div className="flex-1 overflow-y-auto p-8 max-w-5xl mx-auto space-y-8">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 max-w-5xl mx-auto space-y-6 sm:space-y-8 w-full">
         {/* Section: Quickstart */}
         {activeSection === 'quickstart' && (
           <div className="space-y-6">
