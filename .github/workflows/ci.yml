@@ -22,11 +22,12 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Install Monorepo Dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build Workspace Packages
+        run: pnpm build
 
       - name: Typecheck All Packages
         run: pnpm typecheck
