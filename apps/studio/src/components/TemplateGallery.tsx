@@ -32,7 +32,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
       category: 'Finance & Billing',
       description: 'Enterprise commercial tax invoice with bill-to customer records, itemized line totals, subtotal summaries, taxes, and payment terms.',
       icon: FileText,
-      iconColor: 'text-blue-600 bg-blue-50 border-blue-200',
+      iconColor: 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800',
       data: CommercialInvoiceTemplate,
       features: ['Multi-column items table', 'Dynamic subtotal summaries', 'Page-dependent variables', 'Print-ready A4 portrait']
     },
@@ -42,7 +42,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
       category: 'Executive Business Intelligence',
       description: 'Executive quarterly revenue summary with high-level KPI cards, vector column chart breakdown by territory, and category performance matrix.',
       icon: BarChart3,
-      iconColor: 'text-emerald-600 bg-emerald-50 border-emerald-200',
+      iconColor: 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800',
       data: ExecutiveSalesReportTemplate,
       features: ['KPI metric cards', 'Vector territory chart', 'Quota attainment percentage', 'Summary totals']
     },
@@ -52,20 +52,20 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
       category: 'Supply Chain & Operations',
       description: 'Multi-facility warehouse physical inventory audit report with SKU stock levels, reorder threshold alerts, and total inventory valuation.',
       icon: Boxes,
-      iconColor: 'text-purple-600 bg-purple-50 border-purple-200',
+      iconColor: 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40 border-purple-200 dark:border-purple-800',
       data: InventoryStatusTemplate,
       features: ['Calculated reorder alert logic', 'Dynamic valuation calculation', 'Multi-facility stock audit', 'Sorting by value']
     }
   ];
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-100 p-4 sm:p-6 md:p-8">
+    <div className="flex-1 overflow-y-auto bg-slate-100 dark:bg-slate-950 p-4 sm:p-6 md:p-8 transition-colors">
       <div className="max-w-6xl mx-auto space-y-5 sm:space-y-6">
         <div>
-          <h1 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
             Template & Solution Gallery
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Choose from battle-tested, production-ready enterprise templates or launch the interactive BI dashboard.
           </p>
         </div>
@@ -102,10 +102,10 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
             return (
               <div
                 key={tpl.id}
-                className={`bg-white rounded-xl border p-5 flex flex-col justify-between transition-all ${
+                className={`bg-white dark:bg-slate-900 rounded-xl border p-5 flex flex-col justify-between transition-all ${
                   isCurrent
-                    ? 'border-primary-500 ring-2 ring-primary-100 shadow-md'
-                    : 'border-slate-200 hover:border-slate-300 shadow-sm'
+                    ? 'border-primary-500 ring-2 ring-primary-100 dark:ring-primary-950 shadow-md'
+                    : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-sm'
                 }`}
               >
                 <div>
@@ -114,21 +114,21 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                       <Icon className="w-5 h-5" />
                     </div>
                     {isCurrent && (
-                      <span className="text-[10px] font-bold text-primary-600 bg-primary-50 px-2 py-0.5 rounded-full flex items-center gap-1">
+                      <span className="text-[10px] font-bold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/40 px-2 py-0.5 rounded-full flex items-center gap-1">
                         <Check className="w-3 h-3" /> Active
                       </span>
                     )}
                   </div>
 
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">
                     {tpl.category}
                   </span>
-                  <h3 className="text-sm font-bold text-slate-900 mb-2">{tpl.title}</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed mb-4">{tpl.description}</p>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 mb-2">{tpl.title}</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-4">{tpl.description}</p>
 
                   <div className="space-y-1 mb-6">
                     {tpl.features.map((feat) => (
-                      <div key={feat} className="flex items-center gap-1.5 text-xs text-slate-600">
+                      <div key={feat} className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300">
                         <Check className="w-3 h-3 text-emerald-500 flex-shrink-0" />
                         <span>{feat}</span>
                       </div>
@@ -141,8 +141,8 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                   disabled={isCurrent}
                   className={`w-full py-2 text-xs font-semibold rounded-lg transition ${
                     isCurrent
-                      ? 'bg-slate-100 text-slate-400 cursor-default'
-                      : 'bg-slate-900 hover:bg-slate-800 text-white shadow-sm'
+                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-default'
+                      : 'bg-slate-900 dark:bg-primary-600 hover:bg-slate-800 dark:hover:bg-primary-500 text-white shadow-sm'
                   }`}
                 >
                   {isCurrent ? 'Currently Loaded' : 'Load Template'}

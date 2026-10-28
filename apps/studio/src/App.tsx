@@ -89,7 +89,7 @@ export function App() {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col overflow-hidden bg-slate-100">
+    <div className="h-screen w-screen flex flex-col overflow-hidden bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
       <Header
         currentMode={mode}
         onModeChange={setMode}

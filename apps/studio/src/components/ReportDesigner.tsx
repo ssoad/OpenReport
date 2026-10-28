@@ -506,12 +506,12 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
 
   return (
     <div
-      className="flex-1 flex overflow-hidden bg-slate-100"
+      className="flex-1 flex overflow-hidden bg-slate-100 dark:bg-slate-950"
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >
       {/* LEFT TOOL PANEL (Component Palette & Data Explorer) */}
-      <aside className={`bg-white border-r border-slate-200 flex flex-col z-20 shadow-sm select-none ${
+      <aside className={`bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col z-20 shadow-sm select-none ${
         mobileTab === 'palette'
           ? 'fixed inset-0 top-14 bottom-12 z-30 flex w-full'
           : isLeftPanelOpen
@@ -520,24 +520,24 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
       }`}>
         {/* Mobile Close Bar */}
         {mobileTab === 'palette' && (
-          <div className="md:hidden flex items-center justify-between p-3 border-b border-slate-200 bg-slate-50 shrink-0">
-            <span className="text-xs font-bold text-slate-800">Add Components & Data Fields</span>
+          <div className="md:hidden flex items-center justify-between p-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 shrink-0">
+            <span className="text-xs font-bold text-slate-800 dark:text-slate-100">Add Components & Data Fields</span>
             <button
               onClick={() => setMobileTab('canvas')}
-              className="p-1 text-slate-500 hover:text-slate-800 rounded"
+              className="p-1 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 rounded"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
         )}
         {/* Left Tabs */}
-        <div className="flex border-b border-slate-200 bg-slate-50">
+        <div className="flex border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
           <button
             onClick={() => setLeftTab('palette')}
             className={`flex-1 py-2.5 text-xs font-semibold flex items-center justify-center gap-1.5 border-b-2 transition ${
               leftTab === 'palette'
-                ? 'border-primary-600 text-primary-600 bg-white'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                ? 'border-primary-600 text-primary-600 dark:text-primary-400 bg-white dark:bg-slate-800'
+                : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
             }`}
           >
             <Palette className="w-3.5 h-3.5" />
@@ -547,8 +547,8 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
             onClick={() => setLeftTab('data')}
             className={`flex-1 py-2.5 text-xs font-semibold flex items-center justify-center gap-1.5 border-b-2 transition ${
               leftTab === 'data'
-                ? 'border-primary-600 text-primary-600 bg-white'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                ? 'border-primary-600 text-primary-600 dark:text-primary-400 bg-white dark:bg-slate-800'
+                : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
             }`}
           >
             <Database className="w-3.5 h-3.5" />
@@ -558,8 +558,8 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
             onClick={() => setLeftTab('layers')}
             className={`flex-1 py-2.5 text-xs font-semibold flex items-center justify-center gap-1.5 border-b-2 transition ${
               leftTab === 'layers'
-                ? 'border-primary-600 text-primary-600 bg-white'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                ? 'border-primary-600 text-primary-600 dark:text-primary-400 bg-white dark:bg-slate-800'
+                : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
@@ -572,65 +572,65 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
           {leftTab === 'palette' && (
             <div className="space-y-4">
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-2">
                   Basic Components
                 </span>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => addElement('text')}
-                    className="p-2 border border-slate-200 hover:border-primary-500 hover:bg-primary-50/50 rounded flex flex-col items-center justify-center text-slate-700 transition"
+                    className="p-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50/50 dark:hover:bg-primary-950/30 rounded flex flex-col items-center justify-center text-slate-700 dark:text-slate-200 transition"
                   >
-                    <Type className="w-4 h-4 mb-1 text-primary-600" />
+                    <Type className="w-4 h-4 mb-1 text-primary-600 dark:text-primary-400" />
                     <span className="text-xs font-medium">Text</span>
                   </button>
                   <button
                     onClick={() => addElement('rect')}
-                    className="p-2 border border-slate-200 hover:border-primary-500 hover:bg-primary-50/50 rounded flex flex-col items-center justify-center text-slate-700 transition"
+                    className="p-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50/50 dark:hover:bg-primary-950/30 rounded flex flex-col items-center justify-center text-slate-700 dark:text-slate-200 transition"
                   >
-                    <Square className="w-4 h-4 mb-1 text-slate-600" />
+                    <Square className="w-4 h-4 mb-1 text-slate-600 dark:text-slate-400" />
                     <span className="text-xs font-medium">Rectangle</span>
                   </button>
                   <button
                     onClick={() => addElement('line')}
-                    className="p-2 border border-slate-200 hover:border-primary-500 hover:bg-primary-50/50 rounded flex flex-col items-center justify-center text-slate-700 transition"
+                    className="p-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50/50 dark:hover:bg-primary-950/30 rounded flex flex-col items-center justify-center text-slate-700 dark:text-slate-200 transition"
                   >
-                    <Minus className="w-4 h-4 mb-1 text-slate-600" />
+                    <Minus className="w-4 h-4 mb-1 text-slate-600 dark:text-slate-400" />
                     <span className="text-xs font-medium">Line</span>
                   </button>
                   <button
                     onClick={() => addElement('barcode')}
-                    className="p-2 border border-slate-200 hover:border-primary-500 hover:bg-primary-50/50 rounded flex flex-col items-center justify-center text-slate-700 transition"
+                    className="p-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50/50 dark:hover:bg-primary-950/30 rounded flex flex-col items-center justify-center text-slate-700 dark:text-slate-200 transition"
                   >
-                    <QrCode className="w-4 h-4 mb-1 text-slate-600" />
+                    <QrCode className="w-4 h-4 mb-1 text-slate-600 dark:text-slate-400" />
                     <span className="text-xs font-medium">Barcode</span>
                   </button>
                 </div>
               </div>
 
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-2">
                   Data & Analytics
                 </span>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => addElement('table')}
-                    className="p-2 border border-slate-200 hover:border-primary-500 hover:bg-primary-50/50 rounded flex flex-col items-center justify-center text-slate-700 transition"
+                    className="p-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50/50 dark:hover:bg-primary-950/30 rounded flex flex-col items-center justify-center text-slate-700 dark:text-slate-200 transition"
                   >
-                    <TableIcon className="w-4 h-4 mb-1 text-emerald-600" />
+                    <TableIcon className="w-4 h-4 mb-1 text-emerald-600 dark:text-emerald-400" />
                     <span className="text-xs font-medium">Table</span>
                   </button>
                   <button
                     onClick={() => addElement('chart')}
-                    className="p-2 border border-slate-200 hover:border-primary-500 hover:bg-primary-50/50 rounded flex flex-col items-center justify-center text-slate-700 transition"
+                    className="p-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50/50 dark:hover:bg-primary-950/30 rounded flex flex-col items-center justify-center text-slate-700 dark:text-slate-200 transition"
                   >
-                    <BarChart2 className="w-4 h-4 mb-1 text-indigo-600" />
+                    <BarChart2 className="w-4 h-4 mb-1 text-indigo-600 dark:text-indigo-400" />
                     <span className="text-xs font-medium">Chart</span>
                   </button>
                   <button
                     onClick={() => addElement('kpi')}
-                    className="p-2 border border-slate-200 hover:border-primary-500 hover:bg-primary-50/50 rounded flex flex-col items-center justify-center text-slate-700 transition"
+                    className="p-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50/50 dark:hover:bg-primary-950/30 rounded flex flex-col items-center justify-center text-slate-700 dark:text-slate-200 transition"
                   >
-                    <Activity className="w-4 h-4 mb-1 text-amber-600" />
+                    <Activity className="w-4 h-4 mb-1 text-amber-600 dark:text-amber-400" />
                     <span className="text-xs font-medium">KPI Card</span>
                   </button>
                 </div>
@@ -640,7 +640,7 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
 
           {leftTab === 'data' && (
             <div className="space-y-4">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
                 Available Datasets
               </span>
               {report.datasets.map((dataset) => {
@@ -649,10 +649,10 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
                 const fields = Object.keys(sampleRow);
 
                 return (
-                  <div key={dataset.id} className="border border-slate-200 rounded p-2.5 bg-slate-50">
-                    <div className="text-xs font-bold text-slate-800 flex items-center justify-between mb-2">
+                  <div key={dataset.id} className="border border-slate-200 dark:border-slate-800 rounded p-2.5 bg-slate-50 dark:bg-slate-800/50">
+                    <div className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center justify-between mb-2">
                       <span>{dataset.id}</span>
-                      <span className="text-[10px] bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded">
+                      <span className="text-[10px] bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-1.5 py-0.5 rounded">
                         {fields.length} fields
                       </span>
                     </div>
@@ -662,7 +662,7 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
                         <button
                           key={f}
                           onClick={() => addElement('text', { text: `=[${f}]` })}
-                          className="w-full text-left text-xs px-2 py-1 bg-white hover:bg-primary-50 hover:text-primary-600 rounded border border-slate-200 flex items-center justify-between text-slate-600 transition"
+                          className="w-full text-left text-xs px-2 py-1 bg-white dark:bg-slate-800 hover:bg-primary-50 dark:hover:bg-primary-950/40 hover:text-primary-600 dark:hover:text-primary-400 rounded border border-slate-200 dark:border-slate-700 flex items-center justify-between text-slate-600 dark:text-slate-300 transition"
                         >
                           <span className="truncate">{f}</span>
                           <span className="text-[10px] text-slate-400">Insert</span>
@@ -677,7 +677,7 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
 
           {leftTab === 'layers' && (
             <div className="space-y-1">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-2">
                 Document Elements
               </span>
               {report.bands.detail.elements.map((el) => (
@@ -686,14 +686,14 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
                   onClick={() => setSelectedElementId(el.id)}
                   className={`px-2 py-1.5 rounded text-xs flex items-center justify-between cursor-pointer ${
                     selectedElementId === el.id
-                      ? 'bg-primary-100 text-primary-800 font-medium'
-                      : 'hover:bg-slate-100 text-slate-700'
+                      ? 'bg-primary-100 dark:bg-primary-950/60 text-primary-800 dark:text-primary-300 font-medium'
+                      : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
                   }`}
                 >
                   <span className="truncate">{el.id} ({el.type})</span>
                   <button
                     onClick={(e) => { e.stopPropagation(); setSelectedElementId(el.id); deleteSelectedElement(); }}
-                    className="text-slate-400 hover:text-red-500"
+                    className="text-slate-400 hover:text-red-500 dark:hover:text-red-400"
                   >
                     <Trash2 className="w-3 h-3" />
                   </button>
@@ -709,13 +709,15 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
         mobileTab !== 'canvas' ? 'hidden md:flex' : 'flex'
       }`}>
         {/* Responsive Canvas Toolbar */}
-        <div className="h-10 bg-white border-b border-slate-200 flex items-center justify-between px-2 sm:px-4 z-10 shrink-0 gap-1 overflow-x-auto">
+        <div className="h-10 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-2 sm:px-4 z-10 shrink-0 gap-1 overflow-x-auto">
           <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
             {/* Left Panel Toggle (Desktop) */}
             <button
               onClick={() => setIsLeftPanelOpen(!isLeftPanelOpen)}
               className={`hidden md:flex items-center gap-1 px-2 py-1 text-xs font-medium rounded transition ${
-                isLeftPanelOpen ? 'bg-primary-50 text-primary-700 border border-primary-200' : 'text-slate-600 hover:bg-slate-100'
+                isLeftPanelOpen
+                  ? 'bg-primary-50 dark:bg-primary-950/50 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800'
+                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
               title="Toggle Components & Data"
             >
@@ -723,12 +725,12 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
               <span className="hidden lg:inline text-[11px]">Palette</span>
             </button>
 
-            <div className="hidden md:block h-4 w-[1px] bg-slate-200" />
+            <div className="hidden md:block h-4 w-[1px] bg-slate-200 dark:bg-slate-800" />
 
             <button
               onClick={handleUndo}
               disabled={historyIndex === 0}
-              className="p-1.5 text-slate-600 hover:bg-slate-100 rounded disabled:opacity-30"
+              className="p-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded disabled:opacity-30"
               title="Undo"
             >
               <Undo2 className="w-4 h-4" />
@@ -736,16 +738,16 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
             <button
               onClick={handleRedo}
               disabled={historyIndex === history.length - 1}
-              className="p-1.5 text-slate-600 hover:bg-slate-100 rounded disabled:opacity-30"
+              className="p-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded disabled:opacity-30"
               title="Redo"
             >
               <Redo2 className="w-4 h-4" />
             </button>
-            <div className="h-4 w-[1px] bg-slate-200" />
+            <div className="h-4 w-[1px] bg-slate-200 dark:bg-slate-800" />
             <button
               onClick={deleteSelectedElement}
               disabled={!selected}
-              className="p-1.5 text-red-600 hover:bg-red-50 rounded disabled:opacity-30"
+              className="p-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 rounded disabled:opacity-30"
               title="Delete element"
             >
               <Trash2 className="w-4 h-4" />
@@ -755,40 +757,42 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
           <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
             <button
               onClick={() => setZoom(Math.max(0.3, zoom - 0.1))}
-              className="p-1 text-slate-600 hover:bg-slate-100 rounded"
+              className="p-1 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded"
               title="Zoom Out"
             >
               <ZoomOut className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={handleFitWidth}
-              className="px-1.5 py-0.5 text-[10px] sm:text-xs font-mono text-slate-700 hover:bg-slate-100 rounded text-center"
+              className="px-1.5 py-0.5 text-[10px] sm:text-xs font-mono text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-center"
               title="Fit Canvas Width"
             >
               {Math.round(zoom * 100)}%
             </button>
             <button
               onClick={() => setZoom(Math.min(2.0, zoom + 0.1))}
-              className="p-1 text-slate-600 hover:bg-slate-100 rounded"
+              className="p-1 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded"
               title="Zoom In"
             >
               <ZoomIn className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={handleFitWidth}
-              className="p-1 text-slate-600 hover:bg-slate-100 rounded"
+              className="p-1 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded"
               title="Fit Page Width"
             >
               <Maximize2 className="w-3.5 h-3.5" />
             </button>
 
-            <div className="hidden md:block h-4 w-[1px] bg-slate-200" />
+            <div className="hidden md:block h-4 w-[1px] bg-slate-200 dark:bg-slate-800" />
 
             {/* Right Panel Toggle (Desktop) */}
             <button
               onClick={() => setIsRightPanelOpen(!isRightPanelOpen)}
               className={`hidden md:flex items-center gap-1 px-2 py-1 text-xs font-medium rounded transition ${
-                isRightPanelOpen ? 'bg-primary-50 text-primary-700 border border-primary-200' : 'text-slate-600 hover:bg-slate-100'
+                isRightPanelOpen
+                  ? 'bg-primary-50 dark:bg-primary-950/50 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800'
+                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
               title="Toggle Properties Inspector"
             >
@@ -927,25 +931,25 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
       </main>
 
       {/* RIGHT PROPERTIES INSPECTOR */}
-      <aside className={`bg-white border-l border-slate-200 flex flex-col z-20 shadow-sm select-none ${
+      <aside className={`bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col z-20 shadow-sm select-none ${
         mobileTab === 'inspector'
           ? 'fixed inset-0 top-14 bottom-12 z-30 flex w-full'
           : isRightPanelOpen
           ? 'hidden md:flex w-72 shrink-0'
           : 'hidden'
       }`}>
-        <div className="h-10 border-b border-slate-200 px-3 flex items-center justify-between bg-slate-50 shrink-0">
-          <span className="text-xs font-bold text-slate-700">Properties Inspector</span>
+        <div className="h-10 border-b border-slate-200 dark:border-slate-800 px-3 flex items-center justify-between bg-slate-50 dark:bg-slate-900 shrink-0">
+          <span className="text-xs font-bold text-slate-700 dark:text-slate-200">Properties Inspector</span>
           <div className="flex items-center gap-2">
             {selected && (
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-primary-50 text-primary-600 border border-primary-200">
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 border border-primary-200 dark:border-primary-800">
                 {selected.element.type}
               </span>
             )}
             {mobileTab === 'inspector' && (
               <button
                 onClick={() => setMobileTab('canvas')}
-                className="md:hidden p-1 text-slate-500 hover:text-slate-800 rounded"
+                className="md:hidden p-1 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 rounded"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -958,44 +962,44 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
             <>
               {/* Geometry Controls */}
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-2">
                   Position & Size (pt)
                 </span>
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div>
-                    <label className="text-[10px] text-slate-500 block">X Position</label>
+                    <label className="text-[10px] text-slate-500 dark:text-slate-400 block">X Position</label>
                     <input
                       type="number"
                       value={selected.element.x}
                       onChange={(e) => updateSelectedElementProps({ x: Number(e.target.value) })}
-                      className="w-full border border-slate-300 rounded px-2 py-1 text-slate-800"
+                      className="w-full border border-slate-300 dark:border-slate-700 rounded px-2 py-1 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] text-slate-500 block">Y Position</label>
+                    <label className="text-[10px] text-slate-500 dark:text-slate-400 block">Y Position</label>
                     <input
                       type="number"
                       value={selected.element.y}
                       onChange={(e) => updateSelectedElementProps({ y: Number(e.target.value) })}
-                      className="w-full border border-slate-300 rounded px-2 py-1 text-slate-800"
+                      className="w-full border border-slate-300 dark:border-slate-700 rounded px-2 py-1 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] text-slate-500 block">Width</label>
+                    <label className="text-[10px] text-slate-500 dark:text-slate-400 block">Width</label>
                     <input
                       type="number"
                       value={selected.element.width}
                       onChange={(e) => updateSelectedElementProps({ width: Number(e.target.value) })}
-                      className="w-full border border-slate-300 rounded px-2 py-1 text-slate-800"
+                      className="w-full border border-slate-300 dark:border-slate-700 rounded px-2 py-1 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] text-slate-500 block">Height</label>
+                    <label className="text-[10px] text-slate-500 dark:text-slate-400 block">Height</label>
                     <input
                       type="number"
                       value={selected.element.height}
                       onChange={(e) => updateSelectedElementProps({ height: Number(e.target.value) })}
-                      className="w-full border border-slate-300 rounded px-2 py-1 text-slate-800"
+                      className="w-full border border-slate-300 dark:border-slate-700 rounded px-2 py-1 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
                     />
                   </div>
                 </div>
@@ -1004,41 +1008,41 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
               {/* Text Element Properties */}
               {selected.element.type === 'text' && (
                 <div className="space-y-3">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                  <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
                     Content & Typography
                   </span>
 
                   <div>
-                    <label className="text-[10px] text-slate-500 block mb-1">Text or Expression</label>
+                    <label className="text-[10px] text-slate-500 dark:text-slate-400 block mb-1">Text or Expression</label>
                     <textarea
                       value={(selected.element as TextElement).text}
                       onChange={(e) => updateSelectedElementProps({ text: e.target.value })}
                       rows={2}
-                      className="w-full border border-slate-300 rounded px-2 py-1 text-xs font-mono text-slate-800"
+                      className="w-full border border-slate-300 dark:border-slate-700 rounded px-2 py-1 text-xs font-mono text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
                       placeholder="e.g. Sales Report or =[Revenue] * 1.1"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
-                      <label className="text-[10px] text-slate-500 block">Font Size</label>
+                      <label className="text-[10px] text-slate-500 dark:text-slate-400 block">Font Size</label>
                       <input
                         type="number"
                         value={(selected.element as TextElement).font?.size || 10}
                         onChange={(e) => updateSelectedElementProps({
                           font: { ...(selected.element as TextElement).font, size: Number(e.target.value) }
                         })}
-                        className="w-full border border-slate-300 rounded px-2 py-1"
+                        className="w-full border border-slate-300 dark:border-slate-700 rounded px-2 py-1 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] text-slate-500 block">Font Weight</label>
+                      <label className="text-[10px] text-slate-500 dark:text-slate-400 block">Font Weight</label>
                       <select
                         value={(selected.element as TextElement).font?.weight || 'normal'}
                         onChange={(e) => updateSelectedElementProps({
                           font: { ...(selected.element as TextElement).font, weight: e.target.value as any }
                         })}
-                        className="w-full border border-slate-300 rounded px-2 py-1 bg-white"
+                        className="w-full border border-slate-300 dark:border-slate-700 rounded px-2 py-1 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
                       >
                         <option value="normal">Normal</option>
                         <option value="bold">Bold</option>
@@ -1047,13 +1051,13 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
                   </div>
 
                   <div>
-                    <label className="text-[10px] text-slate-500 block">Text Alignment</label>
+                    <label className="text-[10px] text-slate-500 dark:text-slate-400 block">Text Alignment</label>
                     <select
                       value={(selected.element as TextElement).font?.align || 'left'}
                       onChange={(e) => updateSelectedElementProps({
                         font: { ...(selected.element as TextElement).font, align: e.target.value as any }
                       })}
-                      className="w-full border border-slate-300 rounded px-2 py-1 text-xs bg-white"
+                      className="w-full border border-slate-300 dark:border-slate-700 rounded px-2 py-1 text-xs bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
                     >
                       <option value="left">Left</option>
                       <option value="center">Center</option>
@@ -1062,7 +1066,7 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
                   </div>
 
                   <div>
-                    <label className="text-[10px] text-slate-500 block">Text Color</label>
+                    <label className="text-[10px] text-slate-500 dark:text-slate-400 block">Text Color</label>
                     <div className="flex gap-2">
                       <input
                         type="color"
@@ -1070,7 +1074,7 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
                         onChange={(e) => updateSelectedElementProps({
                           font: { ...(selected.element as TextElement).font, color: e.target.value }
                         })}
-                        className="w-8 h-8 rounded border border-slate-300 cursor-pointer"
+                        className="w-8 h-8 rounded border border-slate-300 dark:border-slate-700 cursor-pointer bg-white dark:bg-slate-800"
                       />
                       <input
                         type="text"
@@ -1078,7 +1082,7 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
                         onChange={(e) => updateSelectedElementProps({
                           font: { ...(selected.element as TextElement).font, color: e.target.value }
                         })}
-                        className="flex-1 border border-slate-300 rounded px-2 py-1 text-xs font-mono"
+                        className="flex-1 border border-slate-300 dark:border-slate-700 rounded px-2 py-1 text-xs font-mono text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
                       />
                     </div>
                   </div>
@@ -1088,21 +1092,21 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
               {/* Table Properties */}
               {selected.element.type === 'table' && (
                 <div className="space-y-3">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                  <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
                     Table Columns
                   </span>
 
                   <div className="space-y-2">
                     {(selected.element as TableElement).columns.map((col, idx) => (
-                      <div key={col.id} className="p-2 border border-slate-200 rounded bg-slate-50 text-xs space-y-1">
-                        <div className="flex items-center justify-between font-bold">
+                      <div key={col.id} className="p-2 border border-slate-200 dark:border-slate-700 rounded bg-slate-50 dark:bg-slate-800 text-xs space-y-1">
+                        <div className="flex items-center justify-between font-bold text-slate-800 dark:text-slate-200">
                           <span>Column {idx + 1}</span>
                           <button
                             onClick={() => {
                               const newCols = (selected.element as TableElement).columns.filter((_, i) => i !== idx);
                               updateSelectedElementProps({ columns: newCols });
                             }}
-                            className="text-red-500 hover:text-red-700 text-[10px]"
+                            className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-[10px]"
                           >
                             Remove
                           </button>
@@ -1116,7 +1120,7 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
                             updateSelectedElementProps({ columns: newCols });
                           }}
                           placeholder="Column Title"
-                          className="w-full border border-slate-300 rounded px-1.5 py-0.5 text-xs"
+                          className="w-full border border-slate-300 dark:border-slate-600 rounded px-1.5 py-0.5 text-xs text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700"
                         />
                         <input
                           type="text"
@@ -1127,7 +1131,7 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
                             updateSelectedElementProps({ columns: newCols });
                           }}
                           placeholder="Field name"
-                          className="w-full border border-slate-300 rounded px-1.5 py-0.5 text-xs font-mono"
+                          className="w-full border border-slate-300 dark:border-slate-600 rounded px-1.5 py-0.5 text-xs font-mono text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700"
                         />
                       </div>
                     ))}
@@ -1149,7 +1153,7 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
                         ];
                         updateSelectedElementProps({ columns: newCols });
                       }}
-                      className="w-full py-1 text-xs font-medium text-primary-600 bg-primary-50 hover:bg-primary-100 rounded border border-primary-200"
+                      className="w-full py-1 text-xs font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50 hover:bg-primary-100 dark:hover:bg-primary-900/50 rounded border border-primary-200 dark:border-primary-800"
                     >
                       + Add Column
                     </button>
@@ -1158,8 +1162,8 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
               )}
             </>
           ) : (
-            <div className="h-64 flex flex-col items-center justify-center text-center text-slate-400 p-4">
-              <Layers className="w-8 h-8 mb-2 stroke-1 text-slate-300" />
+            <div className="h-64 flex flex-col items-center justify-center text-center text-slate-400 dark:text-slate-500 p-4">
+              <Layers className="w-8 h-8 mb-2 stroke-1 text-slate-300 dark:text-slate-600" />
               <p className="text-xs">Select any element on the canvas to configure its properties.</p>
             </div>
           )}
@@ -1167,11 +1171,11 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
       </aside>
 
       {/* Mobile Designer Bottom Navigation Switcher */}
-      <div className="md:hidden fixed bottom-0 inset-x-0 h-12 bg-white border-t border-slate-200 flex items-center justify-around px-2 z-30 select-none shadow-lg">
+      <div className="md:hidden fixed bottom-0 inset-x-0 h-12 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-around px-2 z-30 select-none shadow-lg">
         <button
           onClick={() => setMobileTab('palette')}
           className={`flex flex-col items-center gap-0.5 text-[10px] font-medium py-1 px-3 rounded-lg transition ${
-            mobileTab === 'palette' ? 'text-primary-600 bg-primary-50 font-bold' : 'text-slate-500'
+            mobileTab === 'palette' ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50 font-bold' : 'text-slate-500 dark:text-slate-400'
           }`}
         >
           <Palette className="w-4 h-4" />
@@ -1180,7 +1184,7 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
         <button
           onClick={() => setMobileTab('canvas')}
           className={`flex flex-col items-center gap-0.5 text-[10px] font-medium py-1 px-3 rounded-lg transition ${
-            mobileTab === 'canvas' ? 'text-primary-600 bg-primary-50 font-bold' : 'text-slate-500'
+            mobileTab === 'canvas' ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50 font-bold' : 'text-slate-500 dark:text-slate-400'
           }`}
         >
           <Square className="w-4 h-4" />
@@ -1189,7 +1193,7 @@ export const ReportDesigner: React.FC<ReportDesignerProps> = ({ report, onChange
         <button
           onClick={() => setMobileTab('inspector')}
           className={`flex flex-col items-center gap-0.5 text-[10px] font-medium py-1 px-3 rounded-lg transition ${
-            mobileTab === 'inspector' ? 'text-primary-600 bg-primary-50 font-bold' : 'text-slate-500'
+            mobileTab === 'inspector' ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50 font-bold' : 'text-slate-500 dark:text-slate-400'
           }`}
         >
           <SlidersHorizontal className="w-4 h-4" />

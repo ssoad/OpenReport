@@ -4,6 +4,57 @@ The OpenReport Data Engine (`@openreport/data-engine`) is a federated data acces
 
 ---
 
+## Data Pipeline Architecture
+
+### Figure 3.1: Federated Query Virtualization Pipeline
+
+```mermaid
+flowchart LR
+    subgraph DataSources ["External Data Sources"]
+        DB[(PostgreSQL / MySQL)]
+        API[REST API / Microservices]
+        CSV[CSV / S3 Buckets]
+        MEM[In-Memory Store]
+    end
+
+    subgraph Adapters ["IDataProvider Adapters"]
+        P_SQL["PostgresDataProvider"]
+        P_API["RestApiDataProvider"]
+        P_CSV["CsvDataProvider"]
+        P_MEM["MemoryDataProvider"]
+    end
+
+    subgraph DataEngine ["OpenReport Data Engine"]
+        SEC["Row-Level Security (RLS) Filter"]
+        CACHE["Result Set Query Cache"]
+        CALC["Calculated Fields Engine"]
+        SORT["Multi-Column Sorter & Grouper"]
+    end
+
+    subgraph Output ["Bound Datasets"]
+        DS1["Dataset 1: Invoice Header"]
+        DS2["Dataset 2: Line Items"]
+    end
+
+    DB --> P_SQL
+    API --> P_API
+    CSV --> P_CSV
+    MEM --> P_MEM
+
+    P_SQL --> SEC
+    P_API --> SEC
+    P_CSV --> SEC
+    P_MEM --> SEC
+
+    SEC --> CACHE
+    CACHE --> CALC
+    CALC --> SORT
+    SORT --> DS1
+    SORT --> DS2
+```
+
+---
+
 ## 1. The `IDataProvider` Interface
 
 Every data provider implements the `IDataProvider` interface:

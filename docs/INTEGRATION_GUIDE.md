@@ -4,6 +4,33 @@ OpenReport is designed from the core up to be completely framework-agnostic. It 
 
 ---
 
+## Architectural Integration Topology
+
+### Figure 4.1: Client vs Server Execution Topology
+
+```mermaid
+flowchart TD
+    subgraph ClientExecution ["Pattern A: Client-Side Embedded (Zero Server Infrastructure)"]
+        BROWSER["Web Browser (React / Vue / Angular / Svelte)"]
+        ENGINE_C["@openreport/core (WebAssembly / Pure JS)"]
+        EXPORT_C["Client PDF / Excel / CSV Generation"]
+        BROWSER --> ENGINE_C --> EXPORT_C
+    end
+
+    subgraph ServerExecution ["Pattern B: Headless Server / API Gateway (Enterprise High-Throughput)"]
+        POLY["Polyglot Backend (Python / Java / Go / .NET)"]
+        API["Node.js / Express Microservice / Lambda"]
+        ENGINE_S["@openreport/core (Worker Threads)"]
+        STORAGE["S3 / GCS Storage Bucket"]
+        POLY -->|POST /api/reports/generate| API
+        API --> ENGINE_S
+        ENGINE_S -->|PDF / XLSX stream| STORAGE
+        STORAGE -->|Presigned URL| POLY
+    end
+```
+
+---
+
 ## Table of Contents
 1. [React & Next.js Integration](#1-react--nextjs-integration)
 2. [Vue 3 & Nuxt Integration](#2-vue-3--nuxt-integration)

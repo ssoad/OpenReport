@@ -8,6 +8,22 @@ OpenReport provides a modular, extensible component model. Every visual element 
 
 All report elements inherit the following foundational attributes:
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Outer Bounding Box (x, y) pt                                │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │ Border (borderColor, borderWidth)                     │  │
+│  │  ┌─────────────────────────────────────────────────┐  │  │
+│  │  │ Padding (top, right, bottom, left) pt           │  │  │
+│  │  │  ┌───────────────────────────────────────────┐  │  │  │
+│  │  │  │ Content Area: Text / Table Cells / Charts │  │  │  │
+│  │  │  │ (canGrow: auto-expands height if needed)  │  │  │  │
+│  │  │  └───────────────────────────────────────────┘  │  │  │
+│  │  └─────────────────────────────────────────────────┘  │  │
+│  └───────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ```typescript
 interface ReportElementBase {
   id: string;               // Unique element identifier (e.g., "txt_company_name")

@@ -145,9 +145,9 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report, onExport }) 
   const scaledHeightPx = currentPage.height * 1.333333 * zoom;
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden bg-slate-200">
+    <div className="flex-1 flex flex-col overflow-hidden bg-slate-200 dark:bg-slate-950 transition-colors">
       {/* Responsive Top Viewer Toolbar */}
-      <div className="h-12 bg-white border-b border-slate-300 flex items-center justify-between px-2 sm:px-4 z-20 shadow-sm select-none shrink-0 gap-1 sm:gap-3 overflow-x-auto">
+      <div className="h-12 bg-white dark:bg-slate-900 border-b border-slate-300 dark:border-slate-800 flex items-center justify-between px-2 sm:px-4 z-20 shadow-sm select-none shrink-0 gap-1 sm:gap-3 overflow-x-auto">
         {/* Left: Parameters Toggle & Page Navigation */}
         <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
           {report.parameters && report.parameters.length > 0 && (
@@ -155,27 +155,27 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report, onExport }) 
               onClick={() => setShowParameters(!showParameters)}
               className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 text-xs font-medium rounded border transition ${
                 showParameters
-                  ? 'bg-primary-50 text-primary-700 border-primary-300'
-                  : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'
+                  ? 'bg-primary-50 dark:bg-primary-950/50 text-primary-700 dark:text-primary-300 border-primary-300 dark:border-primary-700'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750'
               }`}
               title="Toggle Parameters"
             >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-primary-600" />
+              <SlidersHorizontal className="w-3.5 h-3.5 text-primary-600 dark:text-primary-400" />
               <span className="hidden sm:inline">Params</span>
-              <span className="text-[10px] font-mono bg-slate-100 px-1 rounded">
+              <span className="text-[10px] font-mono bg-slate-100 dark:bg-slate-800 px-1 rounded">
                 {report.parameters.length}
               </span>
             </button>
           )}
 
-          <div className="h-4 w-[1px] bg-slate-300 hidden xs:block" />
+          <div className="h-4 w-[1px] bg-slate-300 dark:bg-slate-700 hidden xs:block" />
 
           {/* Page Controls */}
           <div className="flex items-center space-x-0.5 sm:space-x-1">
             <button
               onClick={() => setCurrentPageIndex(0)}
               disabled={currentPageIndex === 0}
-              className="p-1 text-slate-600 hover:bg-slate-100 rounded disabled:opacity-25"
+              className="p-1 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded disabled:opacity-25"
               title="First Page"
             >
               <ChevronsLeft className="w-4 h-4" />
@@ -183,20 +183,20 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report, onExport }) 
             <button
               onClick={() => setCurrentPageIndex(Math.max(0, currentPageIndex - 1))}
               disabled={currentPageIndex === 0}
-              className="p-1 text-slate-600 hover:bg-slate-100 rounded disabled:opacity-25"
+              className="p-1 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded disabled:opacity-25"
               title="Previous Page"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
 
-            <span className="text-[11px] sm:text-xs font-medium text-slate-700 px-1 sm:px-2 whitespace-nowrap">
+            <span className="text-[11px] sm:text-xs font-medium text-slate-700 dark:text-slate-200 px-1 sm:px-2 whitespace-nowrap">
               {currentPageIndex + 1} / {document.pageCount}
             </span>
 
             <button
               onClick={() => setCurrentPageIndex(Math.min(document.pageCount - 1, currentPageIndex + 1))}
               disabled={currentPageIndex === document.pageCount - 1}
-              className="p-1 text-slate-600 hover:bg-slate-100 rounded disabled:opacity-25"
+              className="p-1 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded disabled:opacity-25"
               title="Next Page"
             >
               <ChevronRight className="w-4 h-4" />
@@ -204,7 +204,7 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report, onExport }) 
             <button
               onClick={() => setCurrentPageIndex(document.pageCount - 1)}
               disabled={currentPageIndex === document.pageCount - 1}
-              className="p-1 text-slate-600 hover:bg-slate-100 rounded disabled:opacity-25"
+              className="p-1 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded disabled:opacity-25"
               title="Last Page"
             >
               <ChevronsRight className="w-4 h-4" />
@@ -220,17 +220,17 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report, onExport }) 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search report..."
-            className="w-full pl-8 pr-3 py-1 text-xs border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary-500 bg-slate-50"
+            className="w-full pl-8 pr-3 py-1 text-xs border border-slate-300 dark:border-slate-700 rounded-md focus:outline-none focus:ring-1 focus:ring-primary-500 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100"
           />
         </div>
 
         {/* Right: Zoom & Export Controls */}
         <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
           {/* Zoom */}
-          <div className="flex items-center space-x-0.5 sm:space-x-1 border-r border-slate-300 pr-1.5 sm:pr-2">
+          <div className="flex items-center space-x-0.5 sm:space-x-1 border-r border-slate-300 dark:border-slate-700 pr-1.5 sm:pr-2">
             <button
               onClick={() => handleZoomChange(zoom - 0.15)}
-              className="p-1 text-slate-600 hover:bg-slate-100 rounded"
+              className="p-1 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded"
               title="Zoom Out"
             >
               <ZoomOut className="w-3.5 h-3.5" />
@@ -239,8 +239,8 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report, onExport }) 
               onClick={handleSetFitWidth}
               className={`px-1.5 py-0.5 text-[10px] sm:text-xs font-mono rounded transition ${
                 fitMode === 'fitWidth'
-                  ? 'bg-primary-100 text-primary-700 font-bold'
-                  : 'text-slate-600 hover:bg-slate-100'
+                  ? 'bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 font-bold'
+                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
               title="Fit to Width"
             >
@@ -248,14 +248,14 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report, onExport }) 
             </button>
             <button
               onClick={() => handleZoomChange(zoom + 0.15)}
-              className="p-1 text-slate-600 hover:bg-slate-100 rounded"
+              className="p-1 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded"
               title="Zoom In"
             >
               <ZoomIn className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={handleSetFitWidth}
-              className="hidden xs:block p-1 text-slate-600 hover:bg-slate-100 rounded"
+              className="hidden xs:block p-1 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded"
               title="Fit Page Width"
             >
               <Maximize2 className="w-3.5 h-3.5" />
@@ -265,7 +265,7 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report, onExport }) 
           {/* Quick Exports */}
           <button
             onClick={() => onExport('pdf')}
-            className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded shadow-sm transition"
+            className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750 rounded shadow-sm transition"
             title="Download PDF"
           >
             <FileText className="w-3.5 h-3.5 text-red-500" />
@@ -273,15 +273,15 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report, onExport }) 
           </button>
           <button
             onClick={() => onExport('xlsx')}
-            className="hidden xs:flex items-center gap-1 px-2 py-1 text-xs font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded shadow-sm transition"
+            className="hidden xs:flex items-center gap-1 px-2 py-1 text-xs font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750 rounded shadow-sm transition"
             title="Download Excel"
           >
-            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
+            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-500" />
             <span className="hidden md:inline">Excel</span>
           </button>
           <button
             onClick={handlePrint}
-            className="p-1 text-slate-700 hover:bg-slate-100 rounded border border-slate-300"
+            className="p-1 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded border border-slate-300 dark:border-slate-700"
             title="Print"
           >
             <Printer className="w-3.5 h-3.5" />
@@ -296,29 +296,29 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report, onExport }) 
           <>
             {/* Backdrop on mobile */}
             <div
-              className="lg:hidden fixed inset-0 bg-slate-900/40 z-30"
+              className="lg:hidden fixed inset-0 bg-slate-900/60 z-30 backdrop-blur-xs"
               onClick={() => setShowParameters(false)}
             />
 
-            <aside className="fixed lg:static inset-y-0 left-0 w-72 sm:w-80 bg-white border-r border-slate-300 flex flex-col p-4 shadow-xl lg:shadow-sm z-40 overflow-y-auto">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-3">
+            <aside className="fixed lg:static inset-y-0 left-0 w-72 sm:w-80 bg-white dark:bg-slate-900 border-r border-slate-300 dark:border-slate-800 flex flex-col p-4 shadow-xl lg:shadow-sm z-40 overflow-y-auto">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800 mb-3">
                 <div className="flex items-center gap-1.5">
-                  <SlidersHorizontal className="w-4 h-4 text-primary-600" />
-                  <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">
+                  <SlidersHorizontal className="w-4 h-4 text-primary-600 dark:text-primary-400" />
+                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide">
                     Parameters
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => engine && renderReport(engine)}
-                    className="text-primary-600 hover:text-primary-700 text-xs font-medium flex items-center gap-1 px-2 py-0.5 rounded bg-primary-50"
+                    className="text-primary-600 dark:text-primary-400 hover:text-primary-700 text-xs font-medium flex items-center gap-1 px-2 py-0.5 rounded bg-primary-50 dark:bg-primary-950/50"
                   >
                     <RefreshCw className="w-3 h-3" />
                     Apply
                   </button>
                   <button
                     onClick={() => setShowParameters(false)}
-                    className="p-1 text-slate-400 hover:text-slate-600 rounded"
+                    className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -328,14 +328,14 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report, onExport }) 
               <div className="space-y-3 flex-1">
                 {report.parameters.map((param) => (
                   <div key={param.name}>
-                    <label className="text-xs font-medium text-slate-700 block mb-1">
+                    <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
                       {param.label || param.name}
                     </label>
                     {param.type === 'select' && param.options ? (
                       <select
                         value={parameters[param.name] ?? ''}
                         onChange={(e) => handleParameterChange(param.name, e.target.value)}
-                        className="w-full border border-slate-300 rounded px-2.5 py-1.5 text-xs bg-white text-slate-800"
+                        className="w-full border border-slate-300 dark:border-slate-700 rounded px-2.5 py-1.5 text-xs bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
                       >
                         {param.options.map((opt) => (
                           <option key={String(opt.value)} value={String(opt.value)}>
@@ -348,22 +348,21 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({ report, onExport }) 
                         type="date"
                         value={parameters[param.name] ?? ''}
                         onChange={(e) => handleParameterChange(param.name, e.target.value)}
-                        className="w-full border border-slate-300 rounded px-2.5 py-1.5 text-xs text-slate-800 bg-white"
-                      >
-                      </input>
+                        className="w-full border border-slate-300 dark:border-slate-700 rounded px-2.5 py-1.5 text-xs text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
+                      />
                     ) : param.type === 'number' ? (
                       <input
                         type="number"
                         value={parameters[param.name] ?? ''}
                         onChange={(e) => handleParameterChange(param.name, Number(e.target.value))}
-                        className="w-full border border-slate-300 rounded px-2.5 py-1.5 text-xs text-slate-800 bg-white"
+                        className="w-full border border-slate-300 dark:border-slate-700 rounded px-2.5 py-1.5 text-xs text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
                       />
                     ) : (
                       <input
                         type="text"
                         value={parameters[param.name] ?? ''}
                         onChange={(e) => handleParameterChange(param.name, e.target.value)}
-                        className="w-full border border-slate-300 rounded px-2.5 py-1.5 text-xs text-slate-800 bg-white"
+                        className="w-full border border-slate-300 dark:border-slate-700 rounded px-2.5 py-1.5 text-xs text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
                       />
                     )}
                   </div>

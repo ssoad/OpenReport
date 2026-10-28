@@ -63,3 +63,95 @@ The OpenReport Specification (`ReportDefinition`) is a versioned, portable JSON 
 - `mm` (Millimeters: 1 mm = 2.83465 pt)
 - `in` (Inches: 1 in = 72 pt)
 - `px` (Pixels: 96 dpi baseline, 1 px = 0.75 pt)
+
+---
+
+## Visual Band Model & Anatomy
+
+### Figure 2.1: Multi-Page Band Printing Hierarchy
+
+```
+┌────────────────────────────────────────────────────────┐
+│ Page Top Margin                                        │
+├────────────────────────────────────────────────────────┤
+│ Page Header (Repeats on every page)                    │
+├────────────────────────────────────────────────────────┤
+│ Report Header (Prints ONCE on Page 1 only)             │
+├────────────────────────────────────────────────────────┤
+│ Group Header (Prints at start of category break)       │
+├────────────────────────────────────────────────────────┤
+│ Detail Band Row 1 (Repeats for every data record)      │
+│ Detail Band Row 2                                      │
+│ Detail Band Row N                                      │
+├────────────────────────────────────────────────────────┤
+│ Group Footer (Prints subtotal summaries at group end)  │
+├────────────────────────────────────────────────────────┤
+│ Report Footer (Prints ONCE before final Page Footer)   │
+├────────────────────────────────────────────────────────┤
+│ Page Footer (Repeats at the bottom of every page)      │
+├────────────────────────────────────────────────────────┤
+│ Page Bottom Margin                                     │
+└────────────────────────────────────────────────────────┘
+```
+
+### Figure 2.2: Page Coordinate System & Margins
+
+```mermaid
+flowchart TD
+    PAGE["Physical Page: width x height (pt)"]
+    MARGINS["Margins: top, right, bottom, left (pt)"]
+    PRINTABLE["Printable Safe Area: (width - left - right) x (height - top - bottom)"]
+    BANDS["Band Canvas (Y offsets relative to band top)"]
+    ELEMENTS["Report Elements: X, Y, Width, Height (pt)"]
+
+    PAGE --> MARGINS
+    MARGINS --> PRINTABLE
+    PRINTABLE --> BANDS
+    BANDS --> ELEMENTS
+```
+
+### Figure 2.3: Element Schema Hierarchy
+
+```mermaid
+classDiagram
+    class ReportElement {
+        +string id
+        +string type
+        +number x
+        +number y
+        +number width
+        +number height
+        +boolean visible
+    }
+
+    class TextElement {
+        +string text
+        +Font font
+        +Border border
+    }
+
+    class TableElement {
+        +string datasetId
+        +TableColumn[] columns
+        +number rowHeight
+        +number headerHeight
+    }
+
+    class ChartElement {
+        +string datasetId
+        +string chartType
+        +string categoryField
+        +string valueField
+    }
+
+    class KpiElement {
+        +string title
+        +string valueExpression
+        +string changeExpression
+    }
+
+    ReportElement <|-- TextElement
+    ReportElement <|-- TableElement
+    ReportElement <|-- ChartElement
+    ReportElement <|-- KpiElement
+```

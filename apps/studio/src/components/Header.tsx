@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   FileText,
   Eye,
@@ -11,7 +11,9 @@ import {
   ChevronDown,
   Menu,
   X,
-  FileSpreadsheet
+  Sun,
+  Moon,
+  Monitor
 } from 'lucide-react';
 
 export type StudioMode =
@@ -45,6 +47,40 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(() => {
+    return (localStorage.getItem('openreport_theme') as any) || 'system';
+  });
+
+  useEffect(() => {
+    const applyTheme = (t: 'light' | 'dark' | 'system') => {
+      const isDark =
+        t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.style.colorScheme = 'dark';
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.style.colorScheme = 'light';
+      }
+    };
+
+    applyTheme(theme);
+    if (theme === 'system') {
+      localStorage.removeItem('openreport_theme');
+      const media = window.matchMedia('(prefers-color-scheme: dark)');
+      const listener = () => applyTheme('system');
+      media.addEventListener('change', listener);
+      return () => media.removeEventListener('change', listener);
+    } else {
+      localStorage.setItem('openreport_theme', theme);
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    if (theme === 'system') setTheme('light');
+    else if (theme === 'light') setTheme('dark');
+    else setTheme('system');
+  };
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -74,7 +110,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <>
-      <header className="h-14 bg-slate-900 text-white flex items-center justify-between px-3 sm:px-4 select-none border-b border-slate-800 z-50 relative shrink-0">
+      <header className="h-14 bg-slate-900 dark:bg-slate-950 text-white flex items-center justify-between px-3 sm:px-4 select-none border-b border-slate-800 dark:border-slate-850 z-50 relative shrink-0 transition-colors">
         {/* Brand & Title */}
         <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
           <div className="flex items-center space-x-2 shrink-0">
@@ -102,7 +138,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Desktop / Tablet Mode Navigation Tabs */}
-        <nav className="hidden md:flex items-center bg-slate-800/80 p-1 rounded-lg border border-slate-700/60 overflow-x-auto max-w-[55vw]">
+        <nav className="hidden md:flex items-center bg-slate-800/80 dark:bg-slate-900/90 p-1 rounded-lg border border-slate-700/60 dark:border-slate-800 overflow-x-auto max-w-[55vw]">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentMode === item.mode;
@@ -113,7 +149,7 @@ export const Header: React.FC<HeaderProps> = ({
                 className={`flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 text-xs font-medium rounded-md transition-all whitespace-nowrap ${
                   isActive
                     ? 'bg-primary-600 text-white shadow'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-700/50 dark:hover:bg-slate-800'
                 }`}
               >
                 <Icon className={`w-3.5 h-3.5 ${item.accent || ''}`} />
@@ -125,9 +161,24 @@ export const Header: React.FC<HeaderProps> = ({
         </nav>
 
         {/* Actions Bar */}
-        <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+        <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
+          {/* Theme Toggle (Desktop) */}
+          <button
+            onClick={toggleTheme}
+            className="p-1.5 text-slate-300 hover:text-white hover:bg-slate-800 dark:hover:bg-slate-850 rounded border border-slate-700 dark:border-slate-800 transition"
+            title={`Current theme: ${theme} (Click to switch)`}
+          >
+            {theme === 'dark' ? (
+              <Moon className="w-4 h-4 text-indigo-400" />
+            ) : theme === 'light' ? (
+              <Sun className="w-4 h-4 text-amber-400" />
+            ) : (
+              <Monitor className="w-4 h-4 text-cyan-400" />
+            )}
+          </button>
+
           {/* Load JSON (Desktop) */}
-          <label className="hidden sm:flex cursor-pointer items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded border border-slate-700 transition">
+          <label className="hidden sm:flex cursor-pointer items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 dark:hover:bg-slate-850 rounded border border-slate-700 dark:border-slate-800 transition">
             <Upload className="w-3.5 h-3.5" />
             <span>Load</span>
             <input
@@ -141,7 +192,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Save JSON (Desktop) */}
           <button
             onClick={onSaveJson}
-            className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded border border-slate-700 transition"
+            className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 dark:hover:bg-slate-850 rounded border border-slate-700 dark:border-slate-800 transition"
             title="Download report JSON definition"
           >
             <Download className="w-3.5 h-3.5" />
@@ -161,33 +212,33 @@ export const Header: React.FC<HeaderProps> = ({
 
             {showExportMenu && (
               <div
-                className="absolute right-0 mt-1 w-48 bg-slate-800 border border-slate-700 rounded-md shadow-2xl py-1 z-50 text-xs"
+                className="absolute right-0 mt-1 w-48 bg-slate-800 dark:bg-slate-900 border border-slate-700 dark:border-slate-800 rounded-md shadow-2xl py-1 z-50 text-xs"
                 onMouseLeave={() => setShowExportMenu(false)}
               >
                 <button
                   onClick={() => { onExport('pdf'); setShowExportMenu(false); }}
-                  className="w-full text-left px-3 py-2 text-slate-200 hover:bg-slate-700 flex items-center justify-between"
+                  className="w-full text-left px-3 py-2 text-slate-200 hover:bg-slate-700 dark:hover:bg-slate-800 flex items-center justify-between"
                 >
                   <span className="font-medium">Adobe PDF (.pdf)</span>
                   <span className="text-[10px] text-primary-400 font-mono">Vector</span>
                 </button>
                 <button
                   onClick={() => { onExport('xlsx'); setShowExportMenu(false); }}
-                  className="w-full text-left px-3 py-2 text-slate-200 hover:bg-slate-700 flex items-center justify-between"
+                  className="w-full text-left px-3 py-2 text-slate-200 hover:bg-slate-700 dark:hover:bg-slate-800 flex items-center justify-between"
                 >
                   <span className="font-medium">Microsoft Excel (.xlsx)</span>
                   <span className="text-[10px] text-emerald-400 font-mono">OpenXML</span>
                 </button>
                 <button
                   onClick={() => { onExport('csv'); setShowExportMenu(false); }}
-                  className="w-full text-left px-3 py-2 text-slate-200 hover:bg-slate-700 flex items-center justify-between"
+                  className="w-full text-left px-3 py-2 text-slate-200 hover:bg-slate-700 dark:hover:bg-slate-800 flex items-center justify-between"
                 >
                   <span className="font-medium">Delimited Data (.csv)</span>
                   <span className="text-[10px] text-amber-400 font-mono">RFC-4180</span>
                 </button>
                 <button
                   onClick={() => { onExport('html'); setShowExportMenu(false); }}
-                  className="w-full text-left px-3 py-2 text-slate-200 hover:bg-slate-700 flex items-center justify-between"
+                  className="w-full text-left px-3 py-2 text-slate-200 hover:bg-slate-700 dark:hover:bg-slate-800 flex items-center justify-between"
                 >
                   <span className="font-medium">Web Document (.html)</span>
                   <span className="text-[10px] text-indigo-400 font-mono">Standalone</span>
@@ -199,7 +250,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Mobile Menu Toggle Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-1.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded transition"
+            className="md:hidden p-1.5 text-slate-300 hover:text-white hover:bg-slate-800 dark:hover:bg-slate-850 rounded transition"
             aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -210,7 +261,7 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Mobile Navigation Drawer Overlay */}
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-x-0 top-14 bottom-0 bg-slate-950/90 backdrop-blur-sm z-40 flex flex-col p-4 overflow-y-auto">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-xl space-y-3">
+          <div className="bg-slate-900 dark:bg-slate-900 border border-slate-800 dark:border-slate-750 rounded-xl p-3 shadow-xl space-y-3">
             <div className="flex items-center justify-between pb-2 border-b border-slate-800">
               <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
                 Workspace Views
@@ -234,7 +285,7 @@ export const Header: React.FC<HeaderProps> = ({
                     className={`flex items-center gap-2 p-2.5 text-xs font-medium rounded-lg text-left transition ${
                       isActive
                         ? 'bg-primary-600 text-white font-semibold shadow'
-                        : 'bg-slate-800 text-slate-200 hover:bg-slate-700'
+                        : 'bg-slate-800 dark:bg-slate-800/80 text-slate-200 hover:bg-slate-700'
                     }`}
                   >
                     <Icon className={`w-4 h-4 shrink-0 ${item.accent || ''}`} />
@@ -242,6 +293,48 @@ export const Header: React.FC<HeaderProps> = ({
                   </button>
                 );
               })}
+            </div>
+
+            {/* Mobile Theme Switcher */}
+            <div className="pt-2 border-t border-slate-800">
+              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-2">
+                Color Scheme
+              </span>
+              <div className="grid grid-cols-3 gap-1.5">
+                <button
+                  onClick={() => setTheme('light')}
+                  className={`flex items-center justify-center gap-1.5 py-1.5 text-xs rounded border transition ${
+                    theme === 'light'
+                      ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold'
+                      : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
+                  }`}
+                >
+                  <Sun className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Light</span>
+                </button>
+                <button
+                  onClick={() => setTheme('dark')}
+                  className={`flex items-center justify-center gap-1.5 py-1.5 text-xs rounded border transition ${
+                    theme === 'dark'
+                      ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40 font-bold'
+                      : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
+                  }`}
+                >
+                  <Moon className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Dark</span>
+                </button>
+                <button
+                  onClick={() => setTheme('system')}
+                  className={`flex items-center justify-center gap-1.5 py-1.5 text-xs rounded border transition ${
+                    theme === 'system'
+                      ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold'
+                      : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
+                  }`}
+                >
+                  <Monitor className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Auto</span>
+                </button>
+              </div>
             </div>
 
             <div className="pt-2 border-t border-slate-800 flex items-center gap-2">

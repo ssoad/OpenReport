@@ -39,6 +39,83 @@ OpenReport follows a clean, decoupled, layered pipeline architecture:
 └───────────────────────┘   └───────────────────────┘   └─────────────────────┘
 ```
 
+### Figure 1.1: System Data Flow & Pipeline Architecture
+
+```mermaid
+flowchart TD
+    subgraph Input ["1. Authoring & Contract"]
+        JSON["Report JSON Specification"]
+        PARAMS["User Execution Parameters"]
+    end
+
+    subgraph Validation ["2. Schema Verification"]
+        SCHEMA["Schema Validator (schema.ts)"]
+        MIGR["Schema Migrator (migrations.ts)"]
+    end
+
+    subgraph DataEngine ["3. Data Virtualization Layer"]
+        PROV["Federated Data Providers (Memory / REST / CSV)"]
+        TRANS["Data Transformations (Filter, Sort, Group, Aggregate)"]
+    end
+
+    subgraph Expressions ["4. Calculation & Expression Runtime"]
+        AST["Recursive-Descent AST Parser"]
+        EVAL["Sandboxed Safe Evaluator (Zero eval)"]
+    end
+
+    subgraph LayoutEngine ["5. Layout & Pagination Engine"]
+        PASS1["Pass 1: Geometry & Flow Measurement"]
+        SPLIT["Page Boundary & Table Row Splitting"]
+        PASS2["Pass 2: Page Expressions & Total Pages Resolution"]
+    end
+
+    subgraph Exporters ["6. Multi-Target Exporters"]
+        PDF["PDF Exporter (Vector Graphics)"]
+        XLSX["Excel Exporter (OpenXML Cells)"]
+        CSV["CSV Exporter (RFC-4180 Sanitized)"]
+        HTML["HTML/SVG Renderer (Semantic DOM)"]
+    end
+
+    JSON --> SCHEMA
+    PARAMS --> SCHEMA
+    SCHEMA --> MIGR
+    MIGR --> PROV
+    PROV --> TRANS
+    TRANS --> EVAL
+    EVAL --> AST
+    AST --> PASS1
+    PASS1 --> SPLIT
+    SPLIT --> PASS2
+    PASS2 --> PDF
+    PASS2 --> XLSX
+    PASS2 --> CSV
+    PASS2 --> HTML
+```
+
+### Figure 1.2: Two-Pass Pagination Sequence
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Client as Consuming Application / Viewer
+    participant Facade as OpenReportEngine
+    participant Data as DataEngine
+    participant Layout as LayoutEngine
+    participant Exporter as Exporter (PDF / XLSX / HTML)
+
+    Client->>Facade: loadData(parameters)
+    Facade->>Data: fetchDatasets(report.dataSources)
+    Data-->>Facade: datasets [rows]
+    Client->>Facade: renderDocument()
+    Facade->>Layout: paginateReport(report, datasets)
+    Note over Layout: Pass 1: Measure bands, split table rows, calculate total pages
+    Note over Layout: Pass 2: Substitute PageNumber and TotalPages in headers/footers
+    Layout-->>Facade: RenderedDocument (pages, boxes)
+    Client->>Facade: exportPdf()
+    Facade->>Exporter: exportToPdf(renderedDoc)
+    Exporter-->>Client: Uint8Array (binary PDF buffer)
+```
+
 ## 2. Core Subsystems
 
 ### 2.1 Universal Report Specification (`packages/schema`)
