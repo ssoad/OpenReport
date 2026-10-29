@@ -2,161 +2,114 @@
 
 ## 1. High-Level Architecture Overview
 
-OpenReport follows a clean, decoupled, layered pipeline architecture:
+OpenReport is engineered around a clean, decoupled, layered pipeline architecture. The platform separates document specification, data virtualization, calculation runtime, layout pagination, and multi-target exporting into distinct, independently testable packages.
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           Authoring & Embedding                             │
-│  ┌─────────────────────────┐  ┌───────────────────────┐  ┌───────────────┐  │
-│  │ OpenReport Studio (App) │  │ React Designer/Viewer │  │ CLI Tool      │  │
-│  └────────────┬────────────┘  └───────────┬───────────┘  └───────┬───────┘  │
-└───────────────┼───────────────────────────┼──────────────────────┼──────────┘
-                │                           │                      │
-┌───────────────▼───────────────────────────▼──────────────────────▼──────────┐
-│                             OpenReport Core Facade                          │
-│                                (packages/core)                              │
-└───────┬───────────────────────────┬──────────────────────────────┬──────────┘
-        │                           │                              │
-┌───────▼───────────────┐   ┌───────▼───────────────┐   ┌──────────▼──────────┐
-│   Report Schema &     │   │     Data Engine &     │   │ Safe Expressions &  │
-│   Validation System   │   │     Providers         │   │ Calculation Runtime │
-│   (packages/schema)   │   │ (packages/data-engine)│   │(packages/expressions│
-└───────┬───────────────┘   └───────┬───────────────┘   └──────────┬──────────┘
-        │                           │                              │
-        └───────────────────────────┼──────────────────────────────┘
-                                    │
-                        ┌───────────▼───────────┐
-                        │ Layout & Multi-Pass   │
-                        │ Pagination Engine     │
-                        │(packages/layout-engine│
-                        └───────────┬───────────┘
-                                    │ Evaluated Document Model (Pages & Boxes)
-        ┌───────────────────────────┼──────────────────────────────┐
-        │                           │                              │
-┌───────▼───────────────┐   ┌───────▼───────────────┐   ┌──────────▼──────────┐
-│     PDF Exporter      │   │     Excel Exporter    │   │ CSV / HTML / SVG    │
-│  (Pure JS, pdf-lib)   │   │   (OpenXML / exceljs) │   │ Exporters & Viewer  │
-└───────────────────────┘   └───────────────────────┘   └─────────────────────┘
-```
+---
 
 ### Figure 1.1: System Data Flow & Pipeline Architecture
 
 ```mermaid
-flowchart TD
-    subgraph Input ["1. Authoring & Contract"]
-        JSON["Report JSON Specification"]
-        PARAMS["User Execution Parameters"]
+flowchart LR
+    subgraph Inputs ["1. Inputs & Authoring"]
+        direction TB
+        JSON["📄 Report JSON Specification"]
+        PARAMS["⚙️ User Execution Parameters"]
     end
 
-    subgraph Validation ["2. Schema Verification"]
-        SCHEMA["Schema Validator (schema.ts)"]
-        MIGR["Schema Migrator (migrations.ts)"]
+    subgraph CoreEngine ["2. OpenReport Processing Engine"]
+        direction TB
+        VALID["1. Schema Validation & Migrations"]
+        DATA["2. Federated Data Virtualization"]
+        EXPR["3. Sandboxed Safe AST Engine"]
+        PAGINATE["4. Two-Pass Pagination Engine"]
+        VALID --> DATA --> EXPR --> PAGINATE
     end
 
-    subgraph DataEngine ["3. Data Virtualization Layer"]
-        PROV["Federated Data Providers (Memory / REST / CSV)"]
-        TRANS["Data Transformations (Filter, Sort, Group, Aggregate)"]
+    subgraph Exporters ["3. Multi-Target Exporters"]
+        direction TB
+        PDF["📕 High-Fidelity Vector PDF"]
+        XLSX["📗 Native OpenXML Excel (.xlsx)"]
+        CSV["📊 Sanitized CSV (RFC-4180)"]
+        VIEWER["👁️ Interactive React Viewer"]
     end
 
-    subgraph Expressions ["4. Calculation & Expression Runtime"]
-        AST["Recursive-Descent AST Parser"]
-        EVAL["Sandboxed Safe Evaluator (Zero eval)"]
-    end
-
-    subgraph LayoutEngine ["5. Layout & Pagination Engine"]
-        PASS1["Pass 1: Geometry & Flow Measurement"]
-        SPLIT["Page Boundary & Table Row Splitting"]
-        PASS2["Pass 2: Page Expressions & Total Pages Resolution"]
-    end
-
-    subgraph Exporters ["6. Multi-Target Exporters"]
-        PDF["PDF Exporter (Vector Graphics)"]
-        XLSX["Excel Exporter (OpenXML Cells)"]
-        CSV["CSV Exporter (RFC-4180 Sanitized)"]
-        HTML["HTML/SVG Renderer (Semantic DOM)"]
-    end
-
-    JSON --> SCHEMA
-    PARAMS --> SCHEMA
-    SCHEMA --> MIGR
-    MIGR --> PROV
-    PROV --> TRANS
-    TRANS --> AST
-    AST --> EVAL
-    EVAL --> PASS1
-    PASS1 --> SPLIT
-    SPLIT --> PASS2
-    PASS2 --> PDF
-    PASS2 --> XLSX
-    PASS2 --> CSV
-    PASS2 --> HTML
+    JSON --> VALID
+    PARAMS --> VALID
+    PAGINATE --> PDF
+    PAGINATE --> XLSX
+    PAGINATE --> CSV
+    PAGINATE --> VIEWER
 ```
+
+---
 
 ### Figure 1.2: Two-Pass Pagination Sequence
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Client as Consuming Application / Viewer
-    participant Facade as OpenReportEngine
+    participant App as Consuming App / Viewer
+    participant Engine as OpenReportEngine
     participant Data as DataEngine
     participant Layout as LayoutEngine
-    participant Exporter as Exporter (PDF / XLSX / HTML)
+    participant Exporter as Exporters (PDF / XLSX)
 
-    Client->>Facade: loadData(parameters)
-    Facade->>Data: fetchDatasets(report.dataSources)
-    Data-->>Facade: datasets [rows]
-    Client->>Facade: renderDocument()
-    Facade->>Layout: paginateReport(report, datasets)
-    Note over Layout: Pass 1: Measure bands, split table rows, calculate total pages
-    Note over Layout: Pass 2: Substitute PageNumber and TotalPages in headers/footers
-    Layout-->>Facade: RenderedDocument (pages, boxes)
-    Client->>Facade: exportPdf()
-    Facade->>Exporter: exportToPdf(renderedDoc)
-    Exporter-->>Client: Uint8Array (binary PDF buffer)
+    App->>Engine: execute(report, { parameters })
+    Engine->>Data: fetchDatasets(report.dataSources)
+    Data-->>Engine: validated records [rows]
+    Engine->>Layout: paginateReport(report, datasets)
+    Note over Layout: Pass 1: Measure bands, split rows, compute total pages
+    Note over Layout: Pass 2: Substitute Page N of M variables
+    Layout-->>Engine: RenderedDocument (pages, visual boxes)
+    App->>Engine: exportToPdf()
+    Engine->>Exporter: renderToPdf(renderedDocument)
+    Exporter-->>App: Uint8Array (binary PDF stream)
 ```
 
-### Figure 1.3: Monorepo Package Topology & Clean Layered Dependencies
+---
+
+### Figure 1.3: Monorepo Package Topology & Layered Dependencies
 
 ```mermaid
-flowchart TD
-    subgraph Layer0 ["Foundations Layer"]
-        SCHEMA["@openreport/schema<br/>(Spec contracts & Zod validators)"]
+flowchart LR
+    subgraph UI ["1. Applications & Embeddable UI"]
+        direction TB
+        STUDIO["apps/studio<br/>(Standalone Studio)"]
+        CLI["@openreport/cli<br/>(Developer CLI)"]
+        VIEWER["@openreport/viewer-react<br/>(Viewer Component)"]
+        DESIGNER["@openreport/designer-react<br/>(Designer Component)"]
+        STUDIO --> VIEWER
+        STUDIO --> DESIGNER
     end
 
-    subgraph Layer1 ["Computational Engines"]
-        EXPR["@openreport/expressions<br/>(Safe AST parser & evaluator)"]
-        DATA["@openreport/data-engine<br/>(Virtualization, REST, CSV)"]
+    subgraph Core ["2. Core Orchestration & Exporters"]
+        direction TB
+        FACADE["@openreport/core<br/>(Unified Facade)"]
+        LAYOUT["@openreport/layout-engine<br/>(Two-Pass Pagination)"]
+        EXPORTERS["@openreport/exporters<br/>(PDF, XLSX, CSV, HTML)"]
+        FACADE --> LAYOUT
+        FACADE --> EXPORTERS
+        LAYOUT --> EXPORTERS
     end
 
-    subgraph Layer2 ["Layout & Document Model"]
-        LAYOUT["@openreport/layout-engine<br/>(Two-pass pagination & typography)"]
+    subgraph Foundation ["3. Compute & Specification Foundation"]
+        direction TB
+        EXPR["@openreport/expressions<br/>(Safe AST Evaluator)"]
+        DATA["@openreport/data-engine<br/>(Query Virtualization)"]
+        SCHEMA["@openreport/schema<br/>(Spec v1.0.0 & Zod)"]
+        EXPR --> SCHEMA
+        DATA --> SCHEMA
     end
 
-    subgraph Layer3 ["Renderers & Exporters"]
-        EXPORTERS["@openreport/exporters<br/>(PDF, OpenXML XLSX, CSV)"]
-        CORE["@openreport/core<br/>(Unified Facade & Engine)"]
-    end
+    VIEWER --> FACADE
+    DESIGNER --> FACADE
+    CLI --> FACADE
 
-    subgraph Layer4 ["UI Components & Studio"]
-        VIEWER["@openreport/viewer-react<br/>(Embeddable Viewer)"]
-        DESIGNER["@openreport/designer-react<br/>(Embeddable Designer)"]
-        STUDIO["apps/studio<br/>(Standalone Web App)"]
-    end
-
-    SCHEMA --> EXPR
-    SCHEMA --> DATA
-    SCHEMA --> LAYOUT
-    EXPR --> LAYOUT
-    DATA --> LAYOUT
-    LAYOUT --> EXPORTERS
-    LAYOUT --> CORE
-    EXPORTERS --> CORE
-    CORE --> VIEWER
-    CORE --> DESIGNER
-    VIEWER --> STUDIO
-    DESIGNER --> STUDIO
+    LAYOUT --> EXPR
+    LAYOUT --> DATA
 ```
+
+---
 
 ## 2. Core Subsystems
 

@@ -66,9 +66,19 @@
     .markdown-body code:not(pre code) { background: rgba(156, 163, 175, 0.15); padding: 0.15rem 0.35rem; border-radius: 0.25rem; font-size: 0.875em; }
 
     /* Mermaid diagrams */
+    .mermaid {
+      margin: 1.5rem 0;
+      padding: 1.25rem;
+      border-radius: 0.75rem;
+      display: flex;
+      justify-content: center;
+      overflow-x: auto;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
     .mermaid svg {
       max-width: 100% !important;
       height: auto !important;
+      min-width: 280px;
     }
   </style>
 
@@ -199,7 +209,7 @@
     </aside>
 
     <!-- Content Area -->
-    <main class="flex-1 overflow-y-auto px-4 sm:px-8 py-8 w-full max-w-4xl mx-auto">
+    <main class="flex-1 overflow-y-auto px-4 sm:px-8 py-8 w-full max-w-5xl mx-auto">
       <div id="contentContainer" class="markdown-body text-slate-800 dark:text-slate-200">
         <!-- Content will be rendered dynamically -->
         <div class="flex items-center justify-center h-64 text-slate-400">
@@ -211,13 +221,88 @@
   </div>
 
   <script>
-    // Initialize Mermaid
+    // Initialize Mermaid with custom modern palette
     function initMermaid(isDark) {
       mermaid.initialize({
         startOnLoad: false,
-        theme: isDark ? 'dark' : 'default',
-        securityLevel: 'loose',
-        fontFamily: 'Inter, -apple-system, sans-serif'
+        theme: 'base',
+        themeVariables: isDark ? {
+          darkMode: true,
+          background: 'transparent',
+          mainBkg: '#1e293b',
+          primaryColor: '#1e293b',
+          primaryTextColor: '#f8fafc',
+          primaryBorderColor: '#3b82f6',
+          lineColor: '#60a5fa',
+          secondaryColor: '#0f172a',
+          secondaryTextColor: '#e2e8f0',
+          secondaryBorderColor: '#475569',
+          tertiaryColor: '#1e293b',
+          tertiaryTextColor: '#94a3b8',
+          clusterBkg: '#0f172a',
+          clusterBorder: '#334155',
+          titleColor: '#93c5fd',
+          edgeLabelBackground: '#0f172a',
+          nodeBorder: '#3b82f6',
+          nodeTextColor: '#f8fafc',
+          actorBkg: '#1e293b',
+          actorBorder: '#3b82f6',
+          actorTextColor: '#f8fafc',
+          actorLineColor: '#64748b',
+          signalColor: '#60a5fa',
+          signalTextColor: '#f8fafc',
+          labelBoxBkgColor: '#1e293b',
+          labelBoxBorderColor: '#334155',
+          labelTextColor: '#f8fafc',
+          loopTextColor: '#f8fafc',
+          noteBkgColor: '#1e293b',
+          noteBorderColor: '#3b82f6',
+          noteTextColor: '#93c5fd'
+        } : {
+          darkMode: false,
+          background: 'transparent',
+          mainBkg: '#ffffff',
+          primaryColor: '#f8fafc',
+          primaryTextColor: '#0f172a',
+          primaryBorderColor: '#2563eb',
+          lineColor: '#2563eb',
+          secondaryColor: '#ffffff',
+          secondaryTextColor: '#334155',
+          secondaryBorderColor: '#cbd5e1',
+          tertiaryColor: '#f1f5f9',
+          tertiaryTextColor: '#64748b',
+          clusterBkg: '#f8fafc',
+          clusterBorder: '#cbd5e1',
+          titleColor: '#1e40af',
+          edgeLabelBackground: '#ffffff',
+          nodeBorder: '#2563eb',
+          nodeTextColor: '#0f172a',
+          actorBkg: '#ffffff',
+          actorBorder: '#2563eb',
+          actorTextColor: '#0f172a',
+          actorLineColor: '#94a3b8',
+          signalColor: '#2563eb',
+          signalTextColor: '#0f172a',
+          labelBoxBkgColor: '#ffffff',
+          labelBoxBorderColor: '#cbd5e1',
+          labelTextColor: '#0f172a',
+          loopTextColor: '#0f172a',
+          noteBkgColor: '#eff6ff',
+          noteBorderColor: '#93c5fd',
+          noteTextColor: '#1e3a8a'
+        },
+        fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+        fontSize: '13px',
+        flowchart: {
+          curve: 'basis',
+          padding: 16,
+          htmlLabels: true
+        },
+        sequence: {
+          actorMargin: 50,
+          mirrorActors: false,
+          bottomMarginAdj: 10
+        }
       });
     }
     initMermaid(document.documentElement.classList.contains('dark'));
