@@ -1,5 +1,40 @@
 # OpenReport Implementation Roadmap
 
+---
+
+### Figure 12.1: Phased Release Roadmap & Milestones
+
+```mermaid
+flowchart LR
+    subgraph P0 ["Phase 0: Foundations"]
+        M0["Monorepo & Spec v1.0.0<br/>(TypeScript, pnpm, Vitest)"]
+    end
+
+    subgraph P1 ["Phase 1: Engines"]
+        M1["Safe AST & Expressions<br/>Data Virtualization Layer"]
+    end
+
+    subgraph P2 ["Phase 2: Layout"]
+        M2["Two-Pass Pagination<br/>PDF, Excel, CSV Exporters"]
+    end
+
+    subgraph P3 ["Phase 3: Studio UI"]
+        M3["Drag-and-Drop Designer<br/>Interactive Viewer"]
+    end
+
+    subgraph P4 ["Phase 4: Analytics"]
+        M4["BI Dashboards & KPIs<br/>Developer CLI Tools"]
+    end
+
+    subgraph P5 ["Phase 5: Ecosystem"]
+        M5["Production Templates<br/>Documentation & Pages"]
+    end
+
+    M0 --> M1 --> M2 --> M3 --> M4 --> M5
+```
+
+---
+
 ## Milestone Progress Checklist
 
 - [x] **Phase 0: Technical Foundation & Architecture**

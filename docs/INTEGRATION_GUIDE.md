@@ -50,6 +50,39 @@ npm install @openreport/core @openreport/viewer-react @openreport/designer-react
 ```
 
 ### 1.1 Embedding the Interactive Viewer
+
+### Figure 4.2: Embeddable Component & Engine State Flow
+
+```mermaid
+flowchart TD
+    subgraph HostApp ["Host Web Application"]
+        STATE["Application State<br/>(reportDefinition, parameters, theme)"]
+        CALLBACKS["Host Callbacks<br/>(onExport, onSave, onParameterChange)"]
+    end
+
+    subgraph ComponentLayer ["@openreport/viewer-react & designer-react"]
+        VIEWER["ReportViewer Component"]
+        DESIGNER["ReportDesigner Component"]
+        TOOLBAR["Interactive Toolbar<br/>(Zoom, Search, Page Nav, Export Buttons)"]
+        PARAM_PANE["Dynamic Parameters Sidebar"]
+    end
+
+    subgraph InternalEngine ["Embedded Engine Instance"]
+        CORE["OpenReportEngine"]
+        PAGINATED["RenderedDocument (Virtual Pages)"]
+    end
+
+    STATE --> VIEWER
+    STATE --> DESIGNER
+    VIEWER --> TOOLBAR
+    VIEWER --> PARAM_PANE
+    VIEWER --> CORE
+    DESIGNER --> CORE
+    CORE --> PAGINATED
+    PAGINATED --> VIEWER
+    TOOLBAR --> CALLBACKS
+```
+
 ```tsx
 import React from 'react';
 import { ReportViewer } from '@openreport/viewer-react';

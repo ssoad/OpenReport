@@ -81,9 +81,9 @@ flowchart TD
     SCHEMA --> MIGR
     MIGR --> PROV
     PROV --> TRANS
-    TRANS --> EVAL
-    EVAL --> AST
-    AST --> PASS1
+    TRANS --> AST
+    AST --> EVAL
+    EVAL --> PASS1
     PASS1 --> SPLIT
     SPLIT --> PASS2
     PASS2 --> PDF
@@ -114,6 +114,48 @@ sequenceDiagram
     Client->>Facade: exportPdf()
     Facade->>Exporter: exportToPdf(renderedDoc)
     Exporter-->>Client: Uint8Array (binary PDF buffer)
+```
+
+### Figure 1.3: Monorepo Package Topology & Clean Layered Dependencies
+
+```mermaid
+flowchart TD
+    subgraph Layer0 ["Foundations Layer"]
+        SCHEMA["@openreport/schema<br/>(Spec contracts & Zod validators)"]
+    end
+
+    subgraph Layer1 ["Computational Engines"]
+        EXPR["@openreport/expressions<br/>(Safe AST parser & evaluator)"]
+        DATA["@openreport/data-engine<br/>(Virtualization, REST, CSV)"]
+    end
+
+    subgraph Layer2 ["Layout & Document Model"]
+        LAYOUT["@openreport/layout-engine<br/>(Two-pass pagination & typography)"]
+    end
+
+    subgraph Layer3 ["Renderers & Exporters"]
+        EXPORTERS["@openreport/exporters<br/>(PDF, OpenXML XLSX, CSV)"]
+        CORE["@openreport/core<br/>(Unified Facade & Engine)"]
+    end
+
+    subgraph Layer4 ["UI Components & Studio"]
+        VIEWER["@openreport/viewer-react<br/>(Embeddable Viewer)"]
+        DESIGNER["@openreport/designer-react<br/>(Embeddable Designer)"]
+        STUDIO["apps/studio<br/>(Standalone Web App)"]
+    end
+
+    SCHEMA --> EXPR
+    SCHEMA --> DATA
+    SCHEMA --> LAYOUT
+    EXPR --> LAYOUT
+    DATA --> LAYOUT
+    LAYOUT --> EXPORTERS
+    LAYOUT --> CORE
+    EXPORTERS --> CORE
+    CORE --> VIEWER
+    CORE --> DESIGNER
+    VIEWER --> STUDIO
+    DESIGNER --> STUDIO
 ```
 
 ## 2. Core Subsystems

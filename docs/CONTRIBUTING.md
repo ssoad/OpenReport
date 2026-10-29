@@ -2,6 +2,39 @@
 
 Welcome to OpenReport! We are excited to collaborate with open-source contributors, reporting engineers, and developers worldwide.
 
+---
+
+### Figure 14.1: Open Source Contribution Lifecycle
+
+```mermaid
+flowchart LR
+    subgraph LocalDev ["1. Local Development"]
+        FORK["Fork & Clone Repo<br/>git clone https://github.com/ssoad/OpenReport.git"]
+        BRANCH["Feature Branch<br/>git checkout -b feature/my-enhancement"]
+        CODE["Implement Code & Add Tests"]
+        VERIFY["Local Verification<br/>pnpm test && pnpm typecheck"]
+        FORK --> BRANCH --> CODE --> VERIFY
+    end
+
+    subgraph CIReview ["2. Review & Continuous Integration"]
+        PR["Open Pull Request on GitHub"]
+        GHA["Automated CI Verification<br/>(Strict TypeScript, 35+ Unit Tests)"]
+        REV["Maintainer Code Review & Feedback"]
+        PR --> GHA --> REV
+    end
+
+    subgraph ReleaseStage ["3. Merged to Main"]
+        MERGE["Squash & Merge to main"]
+        PAGES["Automated GitHub Pages Deployment"]
+        MERGE --> PAGES
+    end
+
+    VERIFY --> PR
+    REV --> MERGE
+```
+
+---
+
 ## Code of Conduct
 We are committed to providing a welcoming, inclusive, and harassment-free environment for everyone. Please be respectful and constructive in all discussions.
 
@@ -14,8 +47,8 @@ We are committed to providing a welcoming, inclusive, and harassment-free enviro
 ### Initializing the Workspace
 ```bash
 # Clone the repository
-git clone https://github.com/openreport/openreport.git
-cd openreport
+git clone https://github.com/ssoad/OpenReport.git
+cd OpenReport
 
 # Install dependencies
 pnpm install

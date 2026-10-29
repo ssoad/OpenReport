@@ -94,15 +94,38 @@ The OpenReport Specification (`ReportDefinition`) is a versioned, portable JSON 
 └────────────────────────────────────────────────────────┘
 ```
 
+```mermaid
+flowchart TD
+    subgraph Page1 ["Page 1 (First Page)"]
+        P1_PH["Page Header"] --> P1_RH["Report Header (Once)"]
+        P1_RH --> P1_GH["Group Header"]
+        P1_GH --> P1_D["Detail Rows 1..k"]
+        P1_D --> P1_PF["Page Footer (Page 1 of M)"]
+    end
+
+    subgraph PageN ["Page 2..M-1 (Middle Pages)"]
+        PN_PH["Page Header"] --> PN_GH["Group Header (Repeated if split)"]
+        PN_GH --> PN_D["Detail Rows k+1..p"]
+        PN_D --> PN_PF["Page Footer (Page n of M)"]
+    end
+
+    subgraph PageLast ["Page M (Final Page)"]
+        PL_PH["Page Header"] --> PL_D["Detail Rows p+1..N"]
+        PL_D --> PL_GF["Group Footer (Subtotals)"]
+        PL_GF --> PL_RF["Report Footer (Grand Totals)"]
+        PL_RF --> PL_PF["Page Footer (Page M of M)"]
+    end
+```
+
 ### Figure 2.2: Page Coordinate System & Margins
 
 ```mermaid
 flowchart TD
-    PAGE["Physical Page: width x height (pt)"]
-    MARGINS["Margins: top, right, bottom, left (pt)"]
-    PRINTABLE["Printable Safe Area: (width - left - right) x (height - top - bottom)"]
-    BANDS["Band Canvas (Y offsets relative to band top)"]
-    ELEMENTS["Report Elements: X, Y, Width, Height (pt)"]
+    PAGE["Physical Page: width x height pt<br/>(e.g., A4: 595.28 x 841.89 pt)"]
+    MARGINS["Margins: top, right, bottom, left pt<br/>(Default: 36 pt / 0.5 in)"]
+    PRINTABLE["Printable Canvas Area<br/>Width = PageWidth - Left - Right<br/>Height = PageHeight - Top - Bottom"]
+    BANDS["Band Stack (Y offsets calculated dynamically per row)"]
+    ELEMENTS["Report Elements: X, Y, Width, Height pt<br/>(CanGrow expands height for multi-line text)"]
 
     PAGE --> MARGINS
     MARGINS --> PRINTABLE
@@ -114,7 +137,7 @@ flowchart TD
 
 ```mermaid
 classDiagram
-    class ReportElement {
+    class ReportElementBase {
         +string id
         +string type
         +number x
@@ -122,12 +145,13 @@ classDiagram
         +number width
         +number height
         +boolean visible
+        +ElementStyle style
     }
 
     class TextElement {
         +string text
-        +Font font
-        +Border border
+        +boolean canGrow
+        +boolean canShrink
     }
 
     class TableElement {
@@ -150,8 +174,22 @@ classDiagram
         +string changeExpression
     }
 
-    ReportElement <|-- TextElement
-    ReportElement <|-- TableElement
-    ReportElement <|-- ChartElement
-    ReportElement <|-- KpiElement
+    class BarcodeElement {
+        +string value
+        +string format
+        +boolean includeText
+    }
+
+    class ShapeElement {
+        +string shapeType
+        +string fillColor
+        +string strokeColor
+    }
+
+    ReportElementBase <|-- TextElement
+    ReportElementBase <|-- TableElement
+    ReportElementBase <|-- ChartElement
+    ReportElementBase <|-- KpiElement
+    ReportElementBase <|-- BarcodeElement
+    ReportElementBase <|-- ShapeElement
 ```

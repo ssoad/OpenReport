@@ -231,6 +231,29 @@ const pdfBuffer = await engine.renderToPdf(reportDefinition, {
 
 ## 5. Security & Multi-Tenancy Best Practices
 
+### Figure 3.2: Parameterized Data Fetching with Row-Level Security (RLS) Sequence
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Authenticated Client
+    participant Engine as OpenReport Engine
+    participant DataLayer as Data Virtualization Layer
+    participant Provider as IDataProvider (e.g. Postgres)
+    participant Database as Database / API
+
+    User->>Engine: executeReport(template, { tenantId: "tenant_42", year: 2026 })
+    Note over Engine: Inject ambient SecurityContext into QueryContext
+    Engine->>DataLayer: prepareQueries(report.dataSources, context)
+    DataLayer->>Provider: fetch(queryWithParameters)
+    Note over Provider: Parameterize SQL: tenant_id = $1 (No string concat)
+    Provider->>Database: query("SELECT ... WHERE tenant_id = $1", ["tenant_42"])
+    Database-->>Provider: rows [filtered strictly to tenant_42]
+    Provider-->>DataLayer: typed records
+    DataLayer-->>Engine: validated dataset
+    Engine-->>User: RenderedDocument (isolated data)
+```
+
 1. **Strict Parameter Sanitization**: Never concatenate user parameters into raw SQL strings. Always use parameterized queries (`$1`, `$2` or `?`).
 2. **Mandatory Tenant Scoping**: Ensure every query injected with user parameters includes the active authenticated tenant identifier (`tenant_id = $1`).
 3. **Query Timeouts**: Configure database connection pools with strict socket timeouts (e.g., `statement_timeout = 10000ms`) to protect against resource exhaustion.

@@ -8,6 +8,8 @@ OpenReport provides a modular, extensible component model. Every visual element 
 
 All report elements inherit the following foundational attributes:
 
+### Figure 5.1: Element Box Model & Geometry Hierarchy
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ Outer Bounding Box (x, y) pt                                │
@@ -22,6 +24,57 @@ All report elements inherit the following foundational attributes:
 │  │  └─────────────────────────────────────────────────┘  │  │
 │  └───────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
+```
+
+```mermaid
+flowchart TD
+    subgraph OuterBox ["1. Outer Position & Dimensions"]
+        POS["Band Coordinates: X, Y in pt"]
+        BOUNDS["Outer Frame: Width x Height in pt"]
+    end
+
+    subgraph BorderLayer ["2. Border & Stroke"]
+        STROKE["Border: Width (pt), Color (Hex), Style (solid/dashed/dotted)"]
+    end
+
+    subgraph PaddingLayer ["3. Internal Safe Area"]
+        PAD["Padding: Top, Right, Bottom, Left in pt"]
+    end
+
+    subgraph ContentLayer ["4. Dynamic Content Area"]
+        CONTENT["Visual Content: Rendered Text / Table Cells / SVG Graphics"]
+        CANGROW["Dynamic Expansion: canGrow increases height on line breaks"]
+    end
+
+    POS --> BOUNDS
+    BOUNDS --> STROKE
+    STROKE --> PAD
+    PAD --> CONTENT
+    CONTENT --> CANGROW
+```
+
+---
+
+### Figure 5.2: Component Taxonomy & Capabilities Matrix
+
+```mermaid
+flowchart LR
+    subgraph Taxonomy ["OpenReport Component Hierarchy"]
+        BASE["ReportElementBase"]
+        TEXT["Text Component<br/>(Rich Typography, Auto-Wrap, Expressions)"]
+        TABULAR["Table Component<br/>(Dynamic Rows, Zebra Striping, Column Sizing)"]
+        CHARTS["Chart Component<br/>(Bar, Line, Area, Pie/Donut Visuals)"]
+        VECTORS["Vector Primitives<br/>(Line, Rectangle, Shapes, Fill/Stroke)"]
+        BARCODES["Barcode Component<br/>(QR Code, Code128, EAN13)"]
+        BI["KPI Metric Card<br/>(Target Delta, Trend Indicators, Formatting)"]
+    end
+
+    BASE --> TEXT
+    BASE --> TABULAR
+    BASE --> CHARTS
+    BASE --> VECTORS
+    BASE --> BARCODES
+    BASE --> BI
 ```
 
 ```typescript

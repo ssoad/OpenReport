@@ -30,6 +30,34 @@ npm install @openreport/viewer-react @openreport/designer-react
 
 An OpenReport document lifecycle consists of three simple stages:
 
+### Figure 9.1: Developer Workflow & Document Lifecycle
+
+```mermaid
+flowchart LR
+    subgraph Step1 ["1. Specification"]
+        DEF["ReportDefinition (JSON)<br/>Page, Margins, Bands, Datasets"]
+    end
+
+    subgraph Step2 ["2. Execution Engine"]
+        ENG["OpenReportEngine<br/>Data Virtualization & Safe AST"]
+        LAY["Layout & Pagination<br/>Page N of M & Line Wrapping"]
+        ENG --> LAY
+    end
+
+    subgraph Step3 ["3. Multi-Target Outputs"]
+        PDF["Vector PDF Document"]
+        XLS["Native OpenXML Excel"]
+        CSV["Sanitized RFC-4180 CSV"]
+        UI["React Viewer Component"]
+    end
+
+    DEF --> ENG
+    LAY --> PDF
+    LAY --> XLS
+    LAY --> CSV
+    LAY --> UI
+```
+
 ```
 ┌─────────────────────────┐      ┌─────────────────────────┐      ┌─────────────────────────┐
 │ 1. Report Specification │ ───> │   2. Execution Engine   │ ───> │  3. Target Output File  │

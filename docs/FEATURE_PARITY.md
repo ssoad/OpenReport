@@ -2,6 +2,39 @@
 
 This document tracks OpenReport's feature capabilities in comparison to industry-standard enterprise reporting platforms, specifically **DevExpress Reporting**, **Telerik Reporting**, and **JasperReports**.
 
+---
+
+### Figure 7.1: Architectural Evolution: Legacy vs OpenReport
+
+```mermaid
+flowchart TD
+    subgraph LegacyDevExpress ["DevExpress Reporting (.NET Era)"]
+        D_SPEC["Proprietary C# / CodeDOM / XML Definitions"]
+        D_RUN[".NET Framework / CLR Server Dependency"]
+        D_DES["Desktop WinForms or Heavy ASP.NET Designer"]
+        D_LIC["Proprietary Commercial License ($$$ per seat)"]
+        D_SPEC --> D_RUN --> D_DES --> D_LIC
+    end
+
+    subgraph LegacyJasper ["JasperReports (Java Era)"]
+        J_SPEC["Verbose JRXML (Complex XML format)"]
+        J_RUN["Java JVM / JasperServer Dependency"]
+        J_DES["Eclipse-based JasperSoft Studio"]
+        J_LIC["GPL / Dual Commercial Licensing Model"]
+        J_SPEC --> J_RUN --> J_DES --> J_LIC
+    end
+
+    subgraph OpenReportPlatform ["OpenReport (Modern Developer-First Platform)"]
+        O_SPEC["Universal JSON Report Schema (v1.0.0, Portable)"]
+        O_RUN["Universal JS/TS Engine (Runs in Browser, Node, Edge)"]
+        O_DES["Embeddable Modern React Designer & Viewer"]
+        O_LIC["Permissive Apache-2.0 Open-Source License"]
+        O_SPEC --> O_RUN --> O_DES --> O_LIC
+    end
+```
+
+---
+
 | Capability Area | Feature | DevExpress Reporting | JasperReports | OpenReport Status | Notes / Implementation |
 |---|---|:---:|:---:|:---:|---|
 | **Core Architecture** | Declarative Specification | Proprietary XML/Code | JRXML (XML) | **Native JSON** | Full JSON Schema with TypeScript types & bidirectional validation |

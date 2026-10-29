@@ -4,6 +4,49 @@ This document provides complete API reference documentation for the core classes
 
 ---
 
+### Figure 6.1: Core Engine API Architecture & Class Hierarchy
+
+```mermaid
+classDiagram
+    class OpenReportEngine {
+        +execute(report, options) Promise~ExecutedReport~
+        +renderToPages(report, options) Promise~RenderedPage[]~
+        +renderToPdf(report, options) Promise~Uint8Array~
+        +renderToXlsx(report, options) Promise~Uint8Array~
+        +renderToCsv(report, options) Promise~string~
+        +renderToHtml(report, options) Promise~string~
+        +registerDataProvider(provider) void
+        +registerPlugin(plugin) void
+    }
+
+    class IDataProvider {
+        <<interface>>
+        +id: string
+        +name: string
+        +fetch(query) Promise~Record[]~
+        +getSchema() Promise~DatasetSchema~
+    }
+
+    class IExporter {
+        <<interface>>
+        +format: string
+        +export(renderedDoc, options) Promise~Uint8Array|string~
+    }
+
+    class PluginRegistry {
+        +register(plugin) void
+        +getComponent(type) ComponentPlugin
+        +getDataProvider(id) IDataProvider
+        +getFunction(name) Function
+    }
+
+    OpenReportEngine --> PluginRegistry
+    OpenReportEngine ..> IDataProvider : registers
+    OpenReportEngine ..> IExporter : executes
+```
+
+---
+
 ## 1. `@openreport/core`
 
 ### `OpenReportEngine`

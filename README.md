@@ -5,11 +5,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/openreport/openreport/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-Passing-emerald?style=flat-square" alt="CI Status" /></a>
-  <a href="https://github.com/openreport/openreport/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-blue?style=flat-square" alt="License" /></a>
-  <a href="#"><img src="https://img.shields.io/badge/TypeScript-5.x-blue?style=flat-square&logo=typescript" alt="TypeScript" /></a>
-  <a href="#"><img src="https://img.shields.io/badge/Tests-35%20Passed-emerald?style=flat-square" alt="Tests" /></a>
-  <a href="https://openreport.github.io/openreport/"><img src="https://img.shields.io/badge/Documentation-GitHub%20Pages-indigo?style=flat-square" alt="GitHub Pages" /></a>
+  <a href="https://github.com/ssoad/OpenReport/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-Passing-emerald?style=flat-square" alt="CI Status" /></a>
+  <a href="https://github.com/ssoad/OpenReport/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-Apache--2.0-blue?style=flat-square" alt="License" /></a>
+  <a href="https://github.com/ssoad/OpenReport"><img src="https://img.shields.io/badge/TypeScript-5.x-blue?style=flat-square&logo=typescript" alt="TypeScript" /></a>
+  <a href="https://github.com/ssoad/OpenReport"><img src="https://img.shields.io/badge/Tests-35%20Passed-emerald?style=flat-square" alt="Tests" /></a>
+  <a href="https://ssoad.github.io/OpenReport/"><img src="https://img.shields.io/badge/Documentation-GitHub%20Pages-indigo?style=flat-square" alt="GitHub Pages" /></a>
 </p>
 
 <p align="center">

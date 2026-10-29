@@ -4,6 +4,11 @@ All notable changes to OpenReport are documented in this file.
 
 ## [0.1.0] - 2026-10-28
 ### Added
+- **Visual Documentation & GitHub Pages**:
+  - Interactive GitHub Pages SPA site (`docs/index.html`) featuring client-side Markdown rendering, instant search, active hash routing, responsive navigation drawer, and light/dark theme toggle.
+  - Complete set of 24 Mermaid visual architecture diagrams and sequence flowcharts across all 15 documentation guides.
+  - Studio visual showcase gallery displaying 10 high-resolution production screenshots covering the Designer, Viewer, Dashboard, Templates, and Data Adapters.
+  - Root `CONTRIBUTING.md` and `SECURITY.md` guidelines for open-source contributors.
 - **Universal Report Specification (`@openreport/schema`)**:
   - Declarative JSON Schema (v1.0.0) with TypeScript types and validation.
   - Page geometries (A4, Letter, Legal, Custom) and standard unit conversions (pt, mm, in, px).

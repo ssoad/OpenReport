@@ -4,6 +4,35 @@ The OpenReport expression engine (`@openreport/expressions`) provides a zero-`ev
 
 ---
 
+### Figure 10.1: Expression Engine Lexing, Parsing & Evaluation Pipeline
+
+```mermaid
+flowchart LR
+    subgraph InputStage ["1. Expression Source"]
+        RAW["Raw Expression String<br/>='Total: ' & SUM(items.price)"]
+    end
+
+    subgraph CompilerStage ["2. Compilation Pipeline"]
+        LEX["Lexer / Tokenizer<br/>(Tokens: EQUAL, STRING, AMP, IDENT, LPAREN)"]
+        PARSER["Recursive-Descent Parser<br/>(Operator Precedence & Grammar)"]
+        AST["Sandboxed AST Nodes<br/>(BinaryOp, FunctionCall, MemberAccess)"]
+        LEX --> PARSER --> AST
+    end
+
+    subgraph RuntimeStage ["3. Evaluation Sandbox"]
+        ENV["Evaluation Context<br/>(row, parameters, globals, datasets)"]
+        VISITOR["Safe AST Visitor Evaluator<br/>(Zero eval, Step Count Limit)"]
+        RESULT["Typed Output Value<br/>(e.g., '$1,420.50')"]
+        ENV --> VISITOR
+        AST --> VISITOR
+        VISITOR --> RESULT
+    end
+
+    RAW --> LEX
+```
+
+---
+
 ## 1. Syntax Basics
 
 Expressions start with an equals sign `=` when used inside report component properties or text fields:
@@ -41,6 +70,29 @@ Expressions start with an equals sign `=` when used inside report component prop
 ---
 
 ## 2. Context Variables & Scopes
+
+### Figure 10.2: Identifier Scope Precedence Resolution
+
+```mermaid
+flowchart TD
+    IDENT["Identifier Reference<br/>(e.g., 'price' or 'startDate')"]
+    CHECK_ROW{"1. Exists in Current Row Scope?<br/>(row / item.field)"}
+    CHECK_PARAM{"2. Exists in Parameters?<br/>(parameters / params.field)"}
+    CHECK_GLOBAL{"3. Exists in Globals?<br/>(pageNumber, totalPages, title)"}
+    CHECK_DATASET{"4. Exists in Dataset?<br/>(dataset.items.field)"}
+    RESOLVED["Resolve Value"]
+    UNDEFINED["Return null / undefined"]
+
+    IDENT --> CHECK_ROW
+    CHECK_ROW -- Yes --> RESOLVED
+    CHECK_ROW -- No --> CHECK_PARAM
+    CHECK_PARAM -- Yes --> RESOLVED
+    CHECK_PARAM -- No --> CHECK_GLOBAL
+    CHECK_GLOBAL -- Yes --> RESOLVED
+    CHECK_GLOBAL -- No --> CHECK_DATASET
+    CHECK_DATASET -- Yes --> RESOLVED
+    CHECK_DATASET -- No --> UNDEFINED
+```
 
 The expression evaluator resolves identifiers in order of scope precedence:
 
